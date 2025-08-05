@@ -18,7 +18,7 @@ const Index = () => {
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Experience the next generation of DeFi trading with Nexus Swap. 
+            Experience the next generation of DeFi trading with Kerdium. 
             Powered by Kuru's advanced orderbook technology for optimal execution.
           </p>
         </div>

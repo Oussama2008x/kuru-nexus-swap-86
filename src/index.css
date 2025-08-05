@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system for Nexus Swap - Web3 Trading Platform
+/* Definition of the design system for Kerdium - Web3 Trading Platform
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Nexus Swap Brand Colors */
+    /* Kerdium Brand Colors */
     --background: 215 25% 8%;
     --foreground: 0 0% 95%;
 
