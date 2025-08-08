@@ -4,6 +4,8 @@ import { Wallet, Menu, Zap, ExternalLink, AlertTriangle } from 'lucide-react';
 import { TradingButton } from "@/components/ui/trading-button";
 import { Badge } from "@/components/ui/badge";
 import { LanguageSelector } from './LanguageSelector';
+import { MobileMenu } from './MobileMenu';
+import { ThemeToggle } from './ThemeToggle';
 import { useWeb3 } from '@/hooks/useWeb3';
 
 export const Header: React.FC = () => {
@@ -64,14 +66,23 @@ export const Header: React.FC = () => {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <a href="#" className="text-foreground/60 hover:text-foreground transition-colors">
-            Trade
+          <a href="/" className="text-foreground/60 hover:text-foreground transition-colors">
+            Swap
           </a>
-          <a href="#" className="text-foreground/60 hover:text-foreground transition-colors">
-            Orderbook
+          <a href="/pool" className="text-foreground/60 hover:text-foreground transition-colors">
+            Pool
           </a>
-          <a href="#" className="text-foreground/60 hover:text-foreground transition-colors">
-            Analytics
+          <a href="/stake" className="text-foreground/60 hover:text-foreground transition-colors">
+            Stake
+          </a>
+          <a href="/tasks" className="text-foreground/60 hover:text-foreground transition-colors">
+            Tasks
+          </a>
+          <a href="/faq" className="text-foreground/60 hover:text-foreground transition-colors">
+            FAQ
+          </a>
+          <a href="/about" className="text-foreground/60 hover:text-foreground transition-colors">
+            About
           </a>
           <a 
             href="https://github.com/Kuru-Labs/kuru-sdk" 
@@ -105,6 +116,9 @@ export const Header: React.FC = () => {
             )}
           </div>
 
+          {/* Theme Toggle */}
+          <ThemeToggle />
+          
           {/* Language Selector */}
           <LanguageSelector />
 
@@ -142,9 +156,7 @@ export const Header: React.FC = () => {
           )}
 
           {/* Mobile Menu */}
-          <TradingButton variant="ghost" size="icon" className="md:hidden">
-            <Menu className="w-4 h-4" />
-          </TradingButton>
+          <MobileMenu />
         </div>
       </div>
     </header>
