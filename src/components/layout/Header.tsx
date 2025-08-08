@@ -3,6 +3,7 @@ import React from 'react';
 import { Wallet, Menu, Zap, ExternalLink, AlertTriangle } from 'lucide-react';
 import { TradingButton } from "@/components/ui/trading-button";
 import { Badge } from "@/components/ui/badge";
+import { LanguageSelector } from './LanguageSelector';
 import { useWeb3 } from '@/hooks/useWeb3';
 
 export const Header: React.FC = () => {
@@ -103,6 +104,9 @@ export const Header: React.FC = () => {
               </TradingButton>
             )}
           </div>
+
+          {/* Language Selector */}
+          <LanguageSelector />
 
           {/* Wallet Button */}
           {isConnected ? (

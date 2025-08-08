@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { TradingStats } from '@/components/layout/TradingStats';
+import { Footer } from '@/components/layout/Footer';
 import { SwapInterface } from '@/components/swap/SwapInterface';
 
 const Index = () => {
@@ -26,6 +26,7 @@ const Index = () => {
           <SwapInterface />
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

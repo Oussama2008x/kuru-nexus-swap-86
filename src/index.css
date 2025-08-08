@@ -77,6 +77,20 @@ All colors MUST be HSL.
     --sidebar-ring: 148 94% 68%;
   }
 
+  /* Moving text animation */
+  @keyframes scroll {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 20s linear infinite;
+  }
+
   .light {
     --background: 0 0% 100%;
     --foreground: 215 25% 15%;
