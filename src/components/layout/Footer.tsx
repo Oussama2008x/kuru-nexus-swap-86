@@ -37,12 +37,24 @@ const Footer = () => {
             <Button variant="outline" size="icon" className="rounded-full">
               <Github className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="icon" className="rounded-full">
-              <Send className="w-4 h-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="rounded-full">
-              <Twitter className="w-4 h-4" />
-            </Button>
+            <a
+              href="https://t.me/kerdium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" size="icon" className="rounded-full">
+                <Send className="w-4 h-4" />
+              </Button>
+            </a>
+            <a
+              href="https://x.com/kerdium?t=HVZunzChvjWb9FFqf0gZZw&s=09"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" size="icon" className="rounded-full">
+                <Twitter className="w-4 h-4" />
+              </Button>
+            </a>
           </div>
 
           {/* Footer Links */}
