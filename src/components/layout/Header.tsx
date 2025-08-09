@@ -67,6 +67,9 @@ export const Header: React.FC = () => {
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <a href="/" className="text-foreground/60 hover:text-foreground transition-colors">
+            Home
+          </a>
+          <a href="/swap" className="text-foreground/60 hover:text-foreground transition-colors">
             Swap
           </a>
           <a href="/pool" className="text-foreground/60 hover:text-foreground transition-colors">

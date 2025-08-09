@@ -31,13 +31,7 @@ const Footer = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col items-center space-y-6">
-          {/* CEO Info */}
-          <div className="text-center">
-            <div className="text-xs text-muted-foreground font-semibold">CEO</div>
-            <div className="text-sm font-medium">Oussama Kerd</div>
-          </div>
-
+        <div className="flex flex-col items-center space-y-8">
           {/* Social Media Links */}
           <div className="flex space-x-4">
             <Button variant="outline" size="icon" className="rounded-full">
@@ -62,6 +56,12 @@ const Footer = () => {
             <a href="/privacy" className="hover:text-foreground transition-colors">
               Privacy Policy
             </a>
+          </div>
+
+          {/* CEO Info */}
+          <div className="text-center">
+            <div className="text-xs text-muted-foreground font-semibold">CEO</div>
+            <div className="text-sm font-medium">Oussama Kerd</div>
           </div>
 
           {/* Copyright */}

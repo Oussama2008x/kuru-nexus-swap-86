@@ -7,7 +7,8 @@ const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: 'Swap', href: '/' },
+    { name: 'Home', href: '/' },
+    { name: 'Swap', href: '/swap' },
     { name: 'Pool', href: '/pool' },
     { name: 'Stake', href: '/stake' },
     { name: 'Tasks', href: '/tasks' },
