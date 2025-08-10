@@ -53,10 +53,6 @@ export const Header: React.FC = () => {
               <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 Kerdium
               </span>
-              <div className="flex flex-col text-xs text-muted-foreground">
-                <span className="font-semibold">CEO</span>
-                <span className="font-medium">Oussama Kerd</span>
-              </div>
             </div>
           </div>
           <Badge variant="secondary" className="text-xs">
@@ -119,44 +115,50 @@ export const Header: React.FC = () => {
             )}
           </div>
 
-          {/* Theme Toggle */}
-          <ThemeToggle />
+          {/* Theme Toggle - Desktop Only */}
+          <div className="hidden md:block">
+            <ThemeToggle />
+          </div>
           
-          {/* Language Selector */}
-          <LanguageSelector />
+          {/* Language Selector - Desktop Only */}
+          <div className="hidden md:block">
+            <LanguageSelector />
+          </div>
 
-          {/* Wallet Button */}
-          {isConnected ? (
-            <div className="flex items-center gap-2">
+          {/* Wallet Button - Desktop Only */}
+          <div className="hidden md:block">
+            {isConnected ? (
+              <div className="flex items-center gap-2">
+                <TradingButton
+                  variant="secondary"
+                  onClick={disconnectWallet}
+                  className="gap-2"
+                >
+                  <div className={`w-2 h-2 rounded-full ${
+                    isMonadTestnet ? 'bg-success' : 'bg-warning'
+                  }`} />
+                  {formatAddress(account!)}
+                </TradingButton>
+                <TradingButton
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => window.open(`${networkConfig.explorerUrl}/address/${account}`, '_blank')}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </TradingButton>
+              </div>
+            ) : (
               <TradingButton
-                variant="secondary"
-                onClick={disconnectWallet}
+                variant="trading"
+                onClick={connectWallet}
+                disabled={isConnecting}
                 className="gap-2"
               >
-                <div className={`w-2 h-2 rounded-full ${
-                  isMonadTestnet ? 'bg-success' : 'bg-warning'
-                }`} />
-                {formatAddress(account!)}
+                <Wallet className="w-4 h-4" />
+                {isConnecting ? "Connecting..." : "Connect Wallet"}
               </TradingButton>
-              <TradingButton
-                variant="ghost"
-                size="icon"
-                onClick={() => window.open(`${networkConfig.explorerUrl}/address/${account}`, '_blank')}
-              >
-                <ExternalLink className="w-4 h-4" />
-              </TradingButton>
-            </div>
-          ) : (
-            <TradingButton
-              variant="trading"
-              onClick={connectWallet}
-              disabled={isConnecting}
-              className="gap-2"
-            >
-              <Wallet className="w-4 h-4" />
-              {isConnecting ? "Connecting..." : "Connect Wallet"}
-            </TradingButton>
-          )}
+            )}
+          </div>
 
           {/* Mobile Menu */}
           <MobileMenu />

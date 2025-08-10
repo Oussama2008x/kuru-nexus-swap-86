@@ -30,12 +30,12 @@ const Home = () => {
             and advanced yield farming on the revolutionary Monad blockchain.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="gap-2">
+            <Button size="lg" className="gap-2" onClick={() => window.location.href = '/swap'}>
               <Zap className="w-4 h-4" />
               Start Trading
               <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" onClick={() => window.location.href = '/swap'}>
               Learn More
             </Button>
           </div>
@@ -124,7 +124,7 @@ const Home = () => {
           <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
             Join the revolution of decentralized finance and experience the power of Kerdium Exchange
           </p>
-          <Button size="lg" className="gap-2">
+          <Button size="lg" className="gap-2" onClick={() => window.location.href = '/swap'}>
             <Zap className="w-4 h-4" />
             Launch App
             <ArrowRight className="w-4 h-4" />
