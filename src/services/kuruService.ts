@@ -635,10 +635,10 @@ class KuruService {
       outputAmount = inputAmount * 1.0;
       priceImpact = 0.0; // No price impact for wrapping
     } else if (tokenIn.symbol === 'MON' && tokenOut.symbol === 'USDC') {
-      outputAmount = inputAmount * 45.50;
+      outputAmount = inputAmount * 3.168425; // 1 MON = 3.168425 USD
       priceImpact = 0.05;
     } else if (tokenIn.symbol === 'USDC' && tokenOut.symbol === 'MON') {
-      outputAmount = inputAmount / 45.50;
+      outputAmount = inputAmount / 3.168425; // 1 USDC = 1/3.168425 MON
       priceImpact = 0.05;
     } else if (tokenIn.symbol === 'WETH' && tokenOut.symbol === 'USDC') {
       outputAmount = inputAmount * 3421.50;
@@ -647,10 +647,10 @@ class KuruService {
       outputAmount = inputAmount / 3421.50;
       priceImpact = 0.03;
     } else if (tokenIn.symbol === 'WMON' && tokenOut.symbol === 'USDC') {
-      outputAmount = inputAmount * 45.50;
+      outputAmount = inputAmount * 3.168425; // 1 WMON = 3.168425 USD (same as MON)
       priceImpact = 0.04;
     } else if (tokenIn.symbol === 'USDC' && tokenOut.symbol === 'WMON') {
-      outputAmount = inputAmount / 45.50;
+      outputAmount = inputAmount / 3.168425; // 1 USDC = 1/3.168425 WMON
       priceImpact = 0.04;
     } else {
       outputAmount = inputAmount;

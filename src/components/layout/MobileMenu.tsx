@@ -33,6 +33,7 @@ const MobileMenu = () => {
     { name: 'Pool', href: '/pool' },
     { name: 'Stake', href: '/stake' },
     { name: 'Tasks', href: '/tasks' },
+    { name: 'USDC', href: '/usdc' },
     { name: 'FAQ', href: '/faq' },
     { name: 'Privacy', href: '/privacy' },
     { name: 'About Kerdium', href: '/about' },
