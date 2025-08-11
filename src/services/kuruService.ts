@@ -3,6 +3,8 @@ import { ethers } from 'ethers';
 import { Token, CurrencyAmount, TradeType, Percent } from '@uniswap/sdk-core';
 import { Pool, Route, Trade, SwapRouter, SwapOptions } from '@uniswap/v3-sdk';
 import { wrappingService, type WrappingResult } from './wrappingService';
+import { USDC_CONTRACT_CONFIG } from './usdcService';
+import { WETH_CONTRACT_CONFIG } from './wethService';
 
 export interface KuruToken {
   symbol: string;
@@ -49,8 +51,8 @@ const MONAD_TESTNET_CONFIG = {
   baseTokens: [
     ethers.constants.AddressZero, // Native MON
     '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701', // WMON
-    '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // USDC (testnet)
-    '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37', // WETH (testnet)
+    USDC_CONTRACT_CONFIG.address, // USDC (testnet)
+    WETH_CONTRACT_CONFIG.address, // WETH (testnet)
     '0xcf5a6076cfa32686c0Df13aBaDa2b40dec133F1d', // WBTC (testnet)
   ]
 };
@@ -597,20 +599,8 @@ class KuruService {
         decimals: 18,
         logoURI: '/tokens/wmon.png'
       },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        address: '0xf817257fed379853cDe0fa4F97AB987181B1E5Ea', // Real USDC testnet address
-        decimals: 6,
-        logoURI: '/tokens/usdc.png'
-      },
-      {
-        symbol: 'WETH',
-        name: 'Wrapped Ethereum',
-        address: '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37', // Real WETH testnet address
-        decimals: 18,
-        logoURI: '/tokens/weth.png'
-      },
+      USDC_CONTRACT_CONFIG,
+      WETH_CONTRACT_CONFIG,
       {
         symbol: 'WBTC',
         name: 'Wrapped Bitcoin',
@@ -641,11 +631,19 @@ class KuruService {
       outputAmount = inputAmount / 3.168425; // 1 USDC = 1/3.168425 MON
       priceImpact = 0.05;
     } else if (tokenIn.symbol === 'WETH' && tokenOut.symbol === 'USDC') {
-      outputAmount = inputAmount * 3421.50;
+      outputAmount = inputAmount * 3400.50; // Using updated ETH price
       priceImpact = 0.03;
     } else if (tokenIn.symbol === 'USDC' && tokenOut.symbol === 'WETH') {
-      outputAmount = inputAmount / 3421.50;
+      outputAmount = inputAmount / 3400.50; // Using updated ETH price
       priceImpact = 0.03;
+    } else if (tokenIn.symbol === 'MON' && tokenOut.symbol === 'WETH') {
+      // 1 MON = 0.00074865 ETH equivalent (as specified)
+      outputAmount = inputAmount * 0.00074865;
+      priceImpact = 0.04;
+    } else if (tokenIn.symbol === 'WETH' && tokenOut.symbol === 'MON') {
+      // 1 WETH = 1/0.00074865 MON
+      outputAmount = inputAmount / 0.00074865;
+      priceImpact = 0.04;
     } else if (tokenIn.symbol === 'WMON' && tokenOut.symbol === 'USDC') {
       outputAmount = inputAmount * 3.168425; // 1 WMON = 3.168425 USD (same as MON)
       priceImpact = 0.04;

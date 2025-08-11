@@ -80,6 +80,9 @@ export const Header: React.FC = () => {
           <a href="/usdc" className="text-foreground/60 hover:text-foreground transition-colors">
             USDC
           </a>
+          <a href="/weth" className="text-foreground/60 hover:text-foreground transition-colors">
+            WETH
+          </a>
           <a href="/faq" className="text-foreground/60 hover:text-foreground transition-colors">
             FAQ
           </a>

@@ -11,6 +11,7 @@ import Pool from "./pages/Pool";
 import Stake from "./pages/Stake";
 import Tasks from "./pages/Tasks";
 import USDC from "./pages/USDC";
+import WETH from "./pages/WETH";
 import FAQ from "./pages/FAQ";
 import Privacy from "./pages/Privacy";
 import About from "./pages/About";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/stake" element={<Stake />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/usdc" element={<USDC />} />
+          <Route path="/weth" element={<WETH />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/about" element={<About />} />

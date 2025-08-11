@@ -34,6 +34,7 @@ const MobileMenu = () => {
     { name: 'Stake', href: '/stake' },
     { name: 'Tasks', href: '/tasks' },
     { name: 'USDC', href: '/usdc' },
+    { name: 'WETH', href: '/weth' },
     { name: 'FAQ', href: '/faq' },
     { name: 'Privacy', href: '/privacy' },
     { name: 'About Kerdium', href: '/about' },
