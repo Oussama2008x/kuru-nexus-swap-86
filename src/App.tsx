@@ -12,6 +12,7 @@ import Stake from "./pages/Stake";
 import Tasks from "./pages/Tasks";
 import USDC from "./pages/USDC";
 import WETH from "./pages/WETH";
+import WBTC from "./pages/WBTC";
 import FAQ from "./pages/FAQ";
 import Privacy from "./pages/Privacy";
 import About from "./pages/About";
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/usdc" element={<USDC />} />
           <Route path="/weth" element={<WETH />} />
+          <Route path="/wbtc" element={<WBTC />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/about" element={<About />} />

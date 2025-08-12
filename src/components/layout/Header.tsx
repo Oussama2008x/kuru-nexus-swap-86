@@ -83,6 +83,9 @@ export const Header: React.FC = () => {
           <a href="/weth" className="text-foreground/60 hover:text-foreground transition-colors">
             WETH
           </a>
+          <a href="/wbtc" className="text-foreground/60 hover:text-foreground transition-colors">
+            WBTC
+          </a>
           <a href="/faq" className="text-foreground/60 hover:text-foreground transition-colors">
             FAQ
           </a>

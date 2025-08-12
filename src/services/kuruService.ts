@@ -699,4 +699,43 @@ class KuruService {
   }
 }
 
+// Conversion rates
+export const MON_TO_USD_RATE = 3.2; // 1 MON = $3.2 USD
+export const USDC_TO_MON_RATE = 3.168425; // 1 MON = 3.168425 USDC
+export const WETH_TO_MON_RATE = 0.00074865; // 1 MON = 0.00074865 WETH
+export const WBTC_TO_MON_RATE = 0.00002648; // 1 MON = 0.00002648 WBTC
+
+// Price conversion utilities
+export const convertMonToUsd = (monAmount: number): number => {
+  return monAmount * MON_TO_USD_RATE;
+};
+
+export const convertUsdToMon = (usdAmount: number): number => {
+  return usdAmount / MON_TO_USD_RATE;
+};
+
+export const convertUsdcToMon = (usdcAmount: number): number => {
+  return usdcAmount / USDC_TO_MON_RATE;
+};
+
+export const convertMonToUsdc = (monAmount: number): number => {
+  return monAmount * USDC_TO_MON_RATE;
+};
+
+export const convertWethToMon = (wethAmount: number): number => {
+  return wethAmount / WETH_TO_MON_RATE;
+};
+
+export const convertMonToWeth = (monAmount: number): number => {
+  return monAmount * WETH_TO_MON_RATE;
+};
+
+export const convertWbtcToMon = (wbtcAmount: number): number => {
+  return wbtcAmount / WBTC_TO_MON_RATE;
+};
+
+export const convertMonToWbtc = (monAmount: number): number => {
+  return monAmount * WBTC_TO_MON_RATE;
+};
+
 export const kuruService = new KuruService();
