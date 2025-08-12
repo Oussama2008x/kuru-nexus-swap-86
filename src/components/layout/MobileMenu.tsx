@@ -33,12 +33,15 @@ const MobileMenu = () => {
     { name: 'Pool', href: '/pool' },
     { name: 'Stake', href: '/stake' },
     { name: 'Tasks', href: '/tasks' },
-    { name: 'USDC', href: '/usdc' },
-    { name: 'WETH', href: '/weth' },
-    { name: 'WBTC', href: '/wbtc' },
     { name: 'FAQ', href: '/faq' },
     { name: 'Privacy', href: '/privacy' },
     { name: 'About Kerdium', href: '/about' },
+  ];
+
+  const cryptoItems = [
+    { name: 'USDC', href: '/usdc' },
+    { name: 'WETH', href: '/weth' },
+    { name: 'WBTC', href: '/wbtc' },
   ];
 
   return (
@@ -64,6 +67,21 @@ const MobileMenu = () => {
                   {item.name}
                 </a>
               ))}
+              
+              {/* Crypto Section */}
+              <div className="mt-4">
+                <div className="text-sm font-medium text-muted-foreground mb-2 px-4">Crypto</div>
+                {cryptoItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="text-left py-2 px-6 rounded-lg hover:bg-muted transition-colors text-foreground hover:text-primary text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 

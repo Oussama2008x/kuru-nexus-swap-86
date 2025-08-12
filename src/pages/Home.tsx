@@ -35,7 +35,7 @@ const Home = () => {
               Start Trading
               <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="lg" onClick={() => window.location.href = '/swap'}>
+            <Button variant="outline" size="lg" onClick={() => window.location.href = '/about'}>
               Learn More
             </Button>
           </div>
@@ -115,6 +115,50 @@ const Home = () => {
               </div>
               <p className="text-sm text-muted-foreground">Uptime</p>
             </div>
+          </div>
+        </div>
+
+        {/* Crypto Trends Section */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">Crypto Trends</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Explore our supported cryptocurrencies with real-time data and advanced features
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className="p-6 hover:shadow-lg transition-all hover:scale-105 cursor-pointer" onClick={() => window.location.href = '/usdc'}>
+              <CardContent className="p-0 text-center">
+                <div className="bg-blue-500/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <img src="/src/assets/tokens/usdc.png" alt="USDC" className="w-10 h-10" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">USDC</h3>
+                <p className="text-muted-foreground mb-4">Stable digital currency pegged to USD</p>
+                <Badge variant="secondary">Stablecoin</Badge>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 hover:shadow-lg transition-all hover:scale-105 cursor-pointer" onClick={() => window.location.href = '/weth'}>
+              <CardContent className="p-0 text-center">
+                <div className="bg-purple-500/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <img src="/src/assets/tokens/weth.png" alt="WETH" className="w-10 h-10" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">WETH</h3>
+                <p className="text-muted-foreground mb-4">Wrapped Ethereum for DeFi trading</p>
+                <Badge variant="secondary">ERC-20</Badge>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 hover:shadow-lg transition-all hover:scale-105 cursor-pointer" onClick={() => window.location.href = '/wbtc'}>
+              <CardContent className="p-0 text-center">
+                <div className="bg-orange-500/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <img src="/src/assets/tokens/wbtc.png" alt="WBTC" className="w-10 h-10" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">WBTC</h3>
+                <p className="text-muted-foreground mb-4">Bitcoin functionality on Ethereum</p>
+                <Badge variant="secondary">Wrapped BTC</Badge>
+              </CardContent>
+            </Card>
           </div>
         </div>
 

@@ -77,15 +77,22 @@ export const Header: React.FC = () => {
           <a href="/tasks" className="text-foreground/60 hover:text-foreground transition-colors">
             Tasks
           </a>
-          <a href="/usdc" className="text-foreground/60 hover:text-foreground transition-colors">
-            USDC
-          </a>
-          <a href="/weth" className="text-foreground/60 hover:text-foreground transition-colors">
-            WETH
-          </a>
-          <a href="/wbtc" className="text-foreground/60 hover:text-foreground transition-colors">
-            WBTC
-          </a>
+          <div className="relative group">
+            <span className="text-foreground/60 hover:text-foreground transition-colors cursor-pointer">
+              Crypto
+            </span>
+            <div className="absolute top-full left-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <a href="/usdc" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted transition-colors">
+                USDC
+              </a>
+              <a href="/weth" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted transition-colors">
+                WETH
+              </a>
+              <a href="/wbtc" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted transition-colors">
+                WBTC
+              </a>
+            </div>
+          </div>
           <a href="/faq" className="text-foreground/60 hover:text-foreground transition-colors">
             FAQ
           </a>

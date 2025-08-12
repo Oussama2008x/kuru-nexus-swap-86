@@ -5,162 +5,227 @@ import { USDCStats } from '@/components/usdc/USDCStats';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Shield, Zap, Globe, CheckCircle } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Shield, Zap, Globe, CheckCircle, Coins, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const USDC = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background to-background/95">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Back to Home Button */}
+        <div className="flex items-center gap-4 mb-6">
+          <Link to="/">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-6">
-            <img 
-              src="/src/assets/tokens/usdc.png" 
-              alt="USDC" 
-              className="w-16 h-16 rounded-full mr-4"
-            />
-            <h1 className="text-4xl md:text-6xl font-bold">
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
-                USD Coin (USDC)
-              </span>
-            </h1>
+        <section className="text-center space-y-6">
+          <div className="flex justify-center mb-4">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"></div>
+              <div className="relative bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-2xl">
+                <img src="/src/assets/tokens/usdc.png" alt="USDC" className="h-12 w-12" />
+              </div>
+            </div>
           </div>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
-            عملة USDC المستقرة على شبكة Monad - عملة رقمية مربوطة بالدولار الأمريكي بنسبة 1:1
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
+          
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+              USD Coin
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground">
+              USDC on Monad Network
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Trade with confidence using USDC - a stable digital currency pegged 1:1 to the US Dollar, now available on the high-performance Monad blockchain
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
             <Badge variant="secondary" className="text-sm px-4 py-2">
               <Shield className="w-4 h-4 mr-2" />
-              عملة مستقرة
+              Stablecoin
             </Badge>
             <Badge variant="outline" className="text-sm px-4 py-2">
               <Zap className="w-4 h-4 mr-2" />
-              شبكة Monad
+              Monad Network
             </Badge>
             <Badge variant="default" className="text-sm px-4 py-2">
               <Globe className="w-4 h-4 mr-2" />
-              مدعومة بالدولار
+              USD Backed
             </Badge>
           </div>
-        </div>
 
-        {/* USDC Statistics */}
-        <section className="mb-12">
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/swap">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
+                <Coins className="h-5 w-5 mr-2" />
+                Trade USDC Now
+              </Button>
+            </Link>
+            <Button variant="outline" size="lg">
+              <Shield className="h-5 w-5 mr-2" />
+              Read Documentation
+            </Button>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section>
           <USDCStats />
         </section>
 
         {/* Features Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            مميزات عملة USDC على شبكة Monad
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="border-primary/20 hover:border-primary/40 transition-colors">
+        <section className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">Why Choose USDC?</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Discover the advantages of using USD Coin on the Monad network
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="border-blue-500/20 hover:border-blue-500/40 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="w-6 h-6 text-primary" />
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-blue-500/10 rounded-lg">
+                    <Shield className="h-5 w-5 text-blue-500" />
+                  </div>
+                  <CardTitle>Price Stability</CardTitle>
                 </div>
-                <CardTitle>استقرار السعر</CardTitle>
-                <CardDescription>
-                  مربوطة بالدولار الأمريكي بنسبة 1:1 مما يضمن استقرار القيمة
-                </CardDescription>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Pegged 1:1 to the US Dollar, ensuring consistent value and reducing volatility for stable transactions
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="border-secondary/20 hover:border-secondary/40 transition-colors">
+            <Card className="border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-secondary" />
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-cyan-500/10 rounded-lg">
+                    <Zap className="h-5 w-5 text-cyan-500" />
+                  </div>
+                  <CardTitle>Fast Transactions</CardTitle>
                 </div>
-                <CardTitle>سرعة المعاملات</CardTitle>
-                <CardDescription>
-                  معاملات سريعة ورسوم منخفضة على شبكة Monad عالية الأداء
-                </CardDescription>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Lightning-fast transactions with minimal fees on the high-performance Monad blockchain
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="border-accent/20 hover:border-accent/40 transition-colors">
+            <Card className="border-green-500/20 hover:border-green-500/40 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
-                  <Globe className="w-6 h-6 text-accent" />
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-green-500/10 rounded-lg">
+                    <Globe className="h-5 w-5 text-green-500" />
+                  </div>
+                  <CardTitle>Interoperability</CardTitle>
                 </div>
-                <CardTitle>قابلية التشغيل البيني</CardTitle>
-                <CardDescription>
-                  متوافقة مع معايير ERC-20 ويمكن استخدامها عبر التطبيقات المختلفة
-                </CardDescription>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  ERC-20 compatible and usable across various DeFi applications and exchanges
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="border-primary/20 hover:border-primary/40 transition-colors">
+            <Card className="border-purple-500/20 hover:border-purple-500/40 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <CheckCircle className="w-6 h-6 text-primary" />
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-purple-500/10 rounded-lg">
+                    <CheckCircle className="h-5 w-5 text-purple-500" />
+                  </div>
+                  <CardTitle>Full Transparency</CardTitle>
                 </div>
-                <CardTitle>شفافية كاملة</CardTitle>
-                <CardDescription>
-                  جميع المعاملات قابلة للتحقق على البلوك تشين ومدعومة بالاحتياطيات
-                </CardDescription>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  All transactions verifiable on-chain and backed by audited USD reserves
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="border-secondary/20 hover:border-secondary/40 transition-colors">
+            <Card className="border-orange-500/20 hover:border-orange-500/40 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="w-6 h-6 text-secondary" />
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-orange-500/10 rounded-lg">
+                    <Shield className="h-5 w-5 text-orange-500" />
+                  </div>
+                  <CardTitle>Advanced Security</CardTitle>
                 </div>
-                <CardTitle>أمان متقدم</CardTitle>
-                <CardDescription>
-                  مدققة بواسطة شركات التدقيق المعتمدة ومطابقة للمعايير التنظيمية
-                </CardDescription>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Audited by certified security firms and compliant with regulatory standards
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="border-accent/20 hover:border-accent/40 transition-colors">
+            <Card className="border-teal-500/20 hover:border-teal-500/40 transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-accent" />
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-teal-500/10 rounded-lg">
+                    <TrendingUp className="h-5 w-5 text-teal-500" />
+                  </div>
+                  <CardTitle>High Liquidity</CardTitle>
                 </div>
-                <CardTitle>سيولة عالية</CardTitle>
-                <CardDescription>
-                  سيولة عالية ومتاحة في جميع البورصات الرئيسية ومنصات DeFi
-                </CardDescription>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  High liquidity available across major exchanges and DeFi platforms
+                </p>
+              </CardContent>
             </Card>
           </div>
         </section>
 
-        {/* Contract Information */}
-        <section className="mb-12">
-          <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5">
+        {/* Technical Details Section */}
+        <section className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">Technical Information</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Detailed technical specifications for the USDC smart contract
+            </p>
+          </div>
+
+          <Card className="bg-gradient-to-br from-background to-blue-500/5 border-blue-500/20">
             <CardHeader>
-              <CardTitle className="text-2xl">معلومات العقد الذكي</CardTitle>
+              <CardTitle className="text-2xl">Smart Contract Details</CardTitle>
               <CardDescription>
-                تفاصيل عقد USDC على شبكة Monad Testnet
+                USDC contract information on Monad Testnet
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">اسم العملة</p>
+                  <p className="text-sm text-muted-foreground">Token Name</p>
                   <p className="font-mono">USD Coin</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">الرمز</p>
+                  <p className="text-sm text-muted-foreground">Symbol</p>
                   <p className="font-mono">USDC</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">العشريات</p>
+                  <p className="text-sm text-muted-foreground">Decimals</p>
                   <p className="font-mono">6</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">الشبكة</p>
+                  <p className="text-sm text-muted-foreground">Network</p>
                   <p className="font-mono">Monad Testnet</p>
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground mb-2">عنوان العقد</p>
+                <p className="text-sm text-muted-foreground mb-2">Contract Address</p>
                 <code className="bg-muted p-2 rounded text-xs block break-all">
                   0x... {/* Replace with actual contract address */}
                 </code>
@@ -170,49 +235,53 @@ const USDC = () => {
         </section>
 
         {/* How to Use Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            كيفية استخدام USDC على Kerdium
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">How to Use USDC on Kerdium</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Get started with USDC trading in three simple steps
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
             <Card className="text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-primary">1</span>
+                <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-blue-500">1</span>
                 </div>
-                <CardTitle>ربط المحفظة</CardTitle>
+                <CardTitle>Connect Wallet</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  قم بربط محفظة MetaMask أو أي محفظة متوافقة مع شبكة Monad
+                  Connect your MetaMask or any Monad-compatible wallet to get started
                 </p>
               </CardContent>
             </Card>
 
             <Card className="text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-secondary">2</span>
+                <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-cyan-500">2</span>
                 </div>
-                <CardTitle>الحصول على USDC</CardTitle>
+                <CardTitle>Get USDC</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  احصل على عملات USDC من خلال التبديل أو التحويل من شبكات أخرى
+                  Acquire USDC through swapping or transferring from other networks
                 </p>
               </CardContent>
             </Card>
 
             <Card className="text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-accent">3</span>
+                <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-green-500">3</span>
                 </div>
-                <CardTitle>ابدأ التداول</CardTitle>
+                <CardTitle>Start Trading</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  استخدم USDC في التداول والاستثمار في منصة Kerdium DeFi
+                  Use USDC for trading and investing in the Kerdium DeFi ecosystem
                 </p>
               </CardContent>
             </Card>
@@ -221,22 +290,26 @@ const USDC = () => {
 
         {/* CTA Section */}
         <section className="text-center">
-          <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5">
+          <Card className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
             <CardContent className="p-8">
               <h2 className="text-3xl font-bold mb-4">
-                ابدأ مع USDC الآن
+                Start with USDC Today
               </h2>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                انضم إلى منصة Kerdium وابدأ في استخدام USDC للتداول والاستثمار في عالم DeFi
+                Join the Kerdium platform and start using USDC for stable, efficient trading in the DeFi world
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="min-w-[200px]">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  انتقل للتداول
-                </Button>
-                <Button variant="outline" size="lg" className="min-w-[200px]">
-                  تعلم المزيد
-                </Button>
+                <Link to="/swap">
+                  <Button size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Go to Trading
+                  </Button>
+                </Link>
+                <Link to="/pool">
+                  <Button variant="outline" size="lg">
+                    Add Liquidity
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

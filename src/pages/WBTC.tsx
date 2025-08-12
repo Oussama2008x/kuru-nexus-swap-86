@@ -12,6 +12,7 @@ import {
   Coins, 
   Lock, 
   ArrowRight,
+  ArrowLeft,
   CheckCircle,
   AlertTriangle,
   Users,
@@ -25,6 +26,16 @@ const WBTC = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Back to Home Button */}
+        <div className="flex items-center gap-4 mb-6">
+          <Link to="/">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         {/* Hero Section */}
         <section className="text-center space-y-6">
           <div className="flex justify-center mb-4">
@@ -41,10 +52,10 @@ const WBTC = () => {
               Wrapped Bitcoin
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground">
-              WBTC على شبكة Monad
+              WBTC on Monad Network
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              تداول Bitcoin بسهولة على شبكة Monad مع WBTC - النسخة المُغلفة من Bitcoin التي تحافظ على نفس القيمة مع إمكانيات DeFi المتقدمة
+              Trade Bitcoin seamlessly on Monad with WBTC - the wrapped version of Bitcoin that maintains the same value with advanced DeFi capabilities
             </p>
           </div>
 
@@ -52,12 +63,12 @@ const WBTC = () => {
             <Link to="/swap">
               <Button size="lg" className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600">
                 <Coins className="h-5 w-5 mr-2" />
-                تداول WBTC الآن
+                Trade WBTC Now
               </Button>
             </Link>
             <Button variant="outline" size="lg">
               <Shield className="h-5 w-5 mr-2" />
-              اقرأ المستندات
+              Read Documentation
             </Button>
           </div>
         </section>
@@ -70,9 +81,9 @@ const WBTC = () => {
         {/* Features Section */}
         <section className="space-y-6">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">لماذا WBTC؟</h2>
+            <h2 className="text-3xl font-bold mb-4">Why Choose WBTC?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              اكتشف مزايا استخدام Wrapped Bitcoin على شبكة Monad
+              Discover the advantages of using Wrapped Bitcoin on the Monad network
             </p>
           </div>
 
@@ -83,12 +94,12 @@ const WBTC = () => {
                   <div className="p-2 bg-orange-500/10 rounded-lg">
                     <Bitcoin className="h-5 w-5 text-orange-500" />
                   </div>
-                  <CardTitle>نفس قيمة Bitcoin</CardTitle>
+                  <CardTitle>Same Bitcoin Value</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  WBTC مدعوم 1:1 بـ Bitcoin الحقيقي، مما يضمن نفس القيمة مع مرونة أكبر في التداول
+                  WBTC is backed 1:1 by real Bitcoin, ensuring the same value with greater trading flexibility
                 </p>
               </CardContent>
             </Card>
@@ -99,12 +110,12 @@ const WBTC = () => {
                   <div className="p-2 bg-blue-500/10 rounded-lg">
                     <Zap className="h-5 w-5 text-blue-500" />
                   </div>
-                  <CardTitle>سرعة Monad</CardTitle>
+                  <CardTitle>Monad Speed</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  استفد من سرعة شبكة Monad العالية ورسومها المنخفضة لتداول Bitcoin بكفاءة
+                  Benefit from Monad network's high speed and low fees for efficient Bitcoin trading
                 </p>
               </CardContent>
             </Card>
@@ -115,12 +126,12 @@ const WBTC = () => {
                   <div className="p-2 bg-green-500/10 rounded-lg">
                     <Shield className="h-5 w-5 text-green-500" />
                   </div>
-                  <CardTitle>أمان متقدم</CardTitle>
+                  <CardTitle>Advanced Security</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  عقد ذكي محقق مع نظام تحكم في الوصول لضمان أقصى درجات الأمان
+                  Audited smart contract with access control system ensuring maximum security
                 </p>
               </CardContent>
             </Card>
@@ -131,12 +142,12 @@ const WBTC = () => {
                   <div className="p-2 bg-purple-500/10 rounded-lg">
                     <Lock className="h-5 w-5 text-purple-500" />
                   </div>
-                  <CardTitle>تحكم في السك والحرق</CardTitle>
+                  <CardTitle>Mint & Burn Control</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  نظام صلاحيات متقدم للتحكم في عمليات سك وحرق WBTC بأمان تام
+                  Advanced permission system for controlling WBTC minting and burning operations with complete security
                 </p>
               </CardContent>
             </Card>
@@ -147,12 +158,12 @@ const WBTC = () => {
                   <div className="p-2 bg-yellow-500/10 rounded-lg">
                     <Users className="h-5 w-5 text-yellow-500" />
                   </div>
-                  <CardTitle>سيولة عالية</CardTitle>
+                  <CardTitle>High Liquidity</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  تمتع بسيولة عالية وتداول سلس مع أقل انزلاق سعري ممكن
+                  Enjoy high liquidity and smooth trading with minimal slippage
                 </p>
               </CardContent>
             </Card>
@@ -163,12 +174,12 @@ const WBTC = () => {
                   <div className="p-2 bg-teal-500/10 rounded-lg">
                     <TrendingUp className="h-5 w-5 text-teal-500" />
                   </div>
-                  <CardTitle>فرص DeFi</CardTitle>
+                  <CardTitle>DeFi Opportunities</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  استخدم WBTC في بروتوكولات DeFi المختلفة للحصول على عوائد إضافية
+                  Use WBTC in various DeFi protocols to earn additional yields
                 </p>
               </CardContent>
             </Card>
@@ -178,9 +189,9 @@ const WBTC = () => {
         {/* Technical Details Section */}
         <section className="space-y-6">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">التفاصيل التقنية</h2>
+            <h2 className="text-3xl font-bold mb-4">Technical Details</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              معلومات تقنية مفصلة حول عقد WBTC الذكي
+              Detailed technical information about the WBTC smart contract
             </p>
           </div>
 
@@ -189,29 +200,29 @@ const WBTC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  مميزات العقد
+                  Contract Features
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">ERC-20</Badge>
-                  <span className="text-sm text-muted-foreground">متوافق مع معيار ERC-20</span>
+                  <span className="text-sm text-muted-foreground">Compatible with ERC-20 standard</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">Mintable</Badge>
-                  <span className="text-sm text-muted-foreground">قابل للسك بصلاحيات</span>
+                  <span className="text-sm text-muted-foreground">Mintable with permissions</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">Burnable</Badge>
-                  <span className="text-sm text-muted-foreground">قابل للحرق بصلاحيات</span>
+                  <span className="text-sm text-muted-foreground">Burnable with permissions</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">Access Control</Badge>
-                  <span className="text-sm text-muted-foreground">نظام تحكم في الوصول</span>
+                  <span className="text-sm text-muted-foreground">Access control system</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">8 Decimals</Badge>
-                  <span className="text-sm text-muted-foreground">نفس دقة Bitcoin</span>
+                  <span className="text-sm text-muted-foreground">Same precision as Bitcoin</span>
                 </div>
               </CardContent>
             </Card>
@@ -220,23 +231,23 @@ const WBTC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5 text-yellow-500" />
-                  معلومات مهمة
+                  Important Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="p-3 bg-yellow-500/10 rounded-lg">
                   <p className="text-sm">
-                    <strong>الصلاحيات:</strong> عمليات السك والحرق تتطلب صلاحيات خاصة من إدارة العقد
+                    <strong>Permissions:</strong> Minting and burning operations require special permissions from contract management
                   </p>
                 </div>
                 <div className="p-3 bg-blue-500/10 rounded-lg">
                   <p className="text-sm">
-                    <strong>الأمان:</strong> العقد محقق ومراجع من قبل خبراء الأمان
+                    <strong>Security:</strong> Contract is audited and reviewed by security experts
                   </p>
                 </div>
                 <div className="p-3 bg-green-500/10 rounded-lg">
                   <p className="text-sm">
-                    <strong>الشفافية:</strong> جميع المعاملات قابلة للتتبع على البلوك تشين
+                    <strong>Transparency:</strong> All transactions are traceable on the blockchain
                   </p>
                 </div>
               </CardContent>
@@ -248,22 +259,22 @@ const WBTC = () => {
         <section className="text-center space-y-6">
           <Card className="bg-gradient-to-r from-orange-500/10 to-yellow-500/10 border-orange-500/20">
             <CardHeader>
-              <CardTitle className="text-2xl">ابدأ التداول الآن</CardTitle>
+              <CardTitle className="text-2xl">Start Trading Now</CardTitle>
               <CardDescription className="text-lg">
-                استفد من فرص التداول المتاحة مع WBTC على شبكة Monad
+                Take advantage of trading opportunities with WBTC on Monad network
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link to="/swap">
                   <Button size="lg" className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600">
-                    انتقل للتداول
+                    Go to Trading
                     <ArrowRight className="h-5 w-5 mr-2" />
                   </Button>
                 </Link>
                 <Link to="/pool">
                   <Button variant="outline" size="lg">
-                    إضافة سيولة
+                    Add Liquidity
                   </Button>
                 </Link>
               </div>
