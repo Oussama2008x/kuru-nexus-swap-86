@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import ethIcon from '@/assets/tokens/eth.png';
+import wethIcon from '@/assets/tokens/weth.jpg';
 import usdcIcon from '@/assets/tokens/usdc.png';
 import wbtcIcon from '@/assets/tokens/wbtc.png';
 import {

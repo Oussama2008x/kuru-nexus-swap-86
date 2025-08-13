@@ -25,7 +25,7 @@ const WBTC_ABI = [
 ];
 
 // WBTC Contract Address on Monad
-export const WBTC_CONTRACT_ADDRESS = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"; // Replace with actual WBTC address on Monad
+export const WBTC_CONTRACT_ADDRESS = "0xcf5a6076cfa32686c0Df13aBaDa2b40dec133F1d"; // WBTC address on Monad
 
 // Convert MON price to WBTC price (1 MON = 0.00002648 WBTC)
 export const MON_TO_WBTC_RATE = 0.00002648;
@@ -57,8 +57,8 @@ class WBTCService {
 
   private async initializeProvider() {
     try {
-      // Initialize with Monad RPC or fallback to ethers default
-      const rpcUrl = "https://rpc.monad.xyz";
+      // Initialize with Monad RPC
+      const rpcUrl = "https://testnet-rpc.monad.xyz";
       this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
       
       if (this.provider) {

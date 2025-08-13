@@ -2,11 +2,11 @@ import { ethers } from 'ethers';
 
 // WETH Contract information on Monad Testnet
 export const WETH_CONTRACT_CONFIG = {
-  address: "0x7e57426cdc8b8a4Eb5EC3AB77E2BAe0Eb5E1394D", // WETH contract address on Monad
+  address: "0xB5a30b0FDc42e3E9760Cb8449Fb37", // WETH contract address on Monad
   name: "Wrapped Ethereum",
   symbol: "WETH",
   decimals: 18,
-  logoURI: "/src/assets/tokens/weth.png"
+  logoURI: "/src/assets/tokens/weth.jpg"
 };
 
 // WETH Contract ABI based on the repository
@@ -144,8 +144,29 @@ export class WETHService {
   // Get current ETH price (WETH should be 1:1 with ETH)
   async getETHPrice(): Promise<number> {
     try {
-      // Using mock ETH price - in production, fetch from price oracle
-      // ETH price around $3400 as example
+      // Try to get real ETH price from multiple sources
+      const responses = await Promise.allSettled([
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'),
+        fetch('https://api.coinpaprika.com/v1/tickers/eth-ethereum'),
+      ]);
+
+      // Try CoinGecko first
+      if (responses[0].status === 'fulfilled') {
+        const data = await (responses[0].value as Response).json();
+        if (data.ethereum?.usd) {
+          return data.ethereum.usd;
+        }
+      }
+
+      // Fallback to CoinPaprika
+      if (responses[1].status === 'fulfilled') {
+        const data = await (responses[1].value as Response).json();
+        if (data.quotes?.USD?.price) {
+          return data.quotes.USD.price;
+        }
+      }
+
+      // Final fallback
       return 3400.50;
     } catch (error) {
       console.error('Error fetching ETH price:', error);

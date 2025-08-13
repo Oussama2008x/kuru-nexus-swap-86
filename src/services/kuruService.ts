@@ -51,8 +51,8 @@ const MONAD_TESTNET_CONFIG = {
   baseTokens: [
     ethers.constants.AddressZero, // Native MON
     '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701', // WMON
-    USDC_CONTRACT_CONFIG.address, // USDC (testnet)
-    WETH_CONTRACT_CONFIG.address, // WETH (testnet)
+    USDC_CONTRACT_CONFIG.address, // USDC: 0xf817257fed379853cDe0fa4F97AB987181B1E5Ea
+    WETH_CONTRACT_CONFIG.address, // WETH: 0xB5a30b0FDc42e3E9760Cb8449Fb37
     '0xcf5a6076cfa32686c0Df13aBaDa2b40dec133F1d', // WBTC (testnet)
   ]
 };
@@ -606,7 +606,7 @@ class KuruService {
         name: 'Wrapped Bitcoin',
         address: '0xcf5a6076cfa32686c0Df13aBaDa2b40dec133F1d', // Real WBTC testnet address
         decimals: 8,
-        logoURI: '/tokens/wbtc.png'
+        logoURI: '/src/assets/tokens/wbtc.png'
       },
     ];
   }
@@ -649,6 +649,30 @@ class KuruService {
       priceImpact = 0.04;
     } else if (tokenIn.symbol === 'USDC' && tokenOut.symbol === 'WMON') {
       outputAmount = inputAmount / 3.168425; // 1 USDC = 1/3.168425 WMON
+      priceImpact = 0.04;
+    } else if (tokenIn.symbol === 'MON' && tokenOut.symbol === 'WBTC') {
+      // 1 MON = 0.00002648 WBTC (as specified)
+      outputAmount = inputAmount * 0.00002648;
+      priceImpact = 0.04;
+    } else if (tokenIn.symbol === 'WBTC' && tokenOut.symbol === 'MON') {
+      // 1 WBTC = 1/0.00002648 MON
+      outputAmount = inputAmount / 0.00002648;
+      priceImpact = 0.04;
+    } else if (tokenIn.symbol === 'WBTC' && tokenOut.symbol === 'USDC') {
+      // WBTC to USDC: using WBTC price ~$100,000
+      outputAmount = inputAmount * 100000;
+      priceImpact = 0.03;
+    } else if (tokenIn.symbol === 'USDC' && tokenOut.symbol === 'WBTC') {
+      // USDC to WBTC: using WBTC price ~$100,000
+      outputAmount = inputAmount / 100000;
+      priceImpact = 0.03;
+    } else if (tokenIn.symbol === 'WBTC' && tokenOut.symbol === 'WETH') {
+      // WBTC to WETH: WBTC $100k / WETH $3.4k = ~29.4 WETH per WBTC
+      outputAmount = inputAmount * 29.4;
+      priceImpact = 0.04;
+    } else if (tokenIn.symbol === 'WETH' && tokenOut.symbol === 'WBTC') {
+      // WETH to WBTC: 1/29.4 WBTC per WETH
+      outputAmount = inputAmount / 29.4;
       priceImpact = 0.04;
     } else {
       outputAmount = inputAmount;
