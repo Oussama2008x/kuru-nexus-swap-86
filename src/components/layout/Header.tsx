@@ -1,44 +1,12 @@
 
 import React from 'react';
-import { Wallet, Menu, Zap, ExternalLink, AlertTriangle } from 'lucide-react';
-import { TradingButton } from "@/components/ui/trading-button";
-import { Badge } from "@/components/ui/badge";
-import { LanguageSelector } from './LanguageSelector';
+import { Menu, Zap } from 'lucide-react';
+import { ConnectButton } from "thirdweb/react";
 import { MobileMenu } from './MobileMenu';
 import { ThemeToggle } from './ThemeToggle';
-import { useWeb3 } from '@/hooks/useWeb3';
+import { client, wallets } from '@/lib/thirdweb';
 
 export const Header: React.FC = () => {
-  const { 
-    account, 
-    isConnected, 
-    isConnecting, 
-    chainId, 
-    isMonadTestnet,
-    isWrongNetwork,
-    connectWallet, 
-    disconnectWallet,
-    switchToMonad,
-    networkConfig
-  } = useWeb3();
-
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-
-  const getNetworkName = () => {
-    if (isMonadTestnet) return 'Monad Testnet';
-    if (chainId === 1) return 'Ethereum';
-    return 'Unknown Network';
-  };
-
-  const getNetworkStatus = () => {
-    if (isMonadTestnet) return { color: 'bg-success', text: 'Monad Testnet' };
-    if (isWrongNetwork) return { color: 'bg-warning', text: 'Wrong Network' };
-    return { color: 'bg-muted', text: 'Not Connected' };
-  };
-
-  const networkStatus = getNetworkStatus();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -100,64 +68,24 @@ export const Header: React.FC = () => {
 
         {/* Wallet Connection */}
         <div className="flex items-center gap-2">
-          {/* Network Indicator */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border/50">
-            <div className={`w-2 h-2 rounded-full animate-pulse ${networkStatus.color}`} />
-            <span className="text-xs font-medium">
-              {networkStatus.text}
-            </span>
-            {isWrongNetwork && (
-              <TradingButton
-                variant="ghost"
-                size="sm"
-                onClick={switchToMonad}
-                className="h-6 px-2 text-xs border-warning text-warning hover:bg-warning/10"
-              >
-                <AlertTriangle className="w-3 h-3 mr-1" />
-                Switch
-              </TradingButton>
-            )}
-          </div>
-
           {/* Theme Toggle - Desktop Only */}
           <div className="hidden md:block">
             <ThemeToggle />
           </div>
           
-
           {/* Wallet Button - Desktop Only */}
           <div className="hidden md:block">
-            {isConnected ? (
-              <div className="flex items-center gap-2">
-                <TradingButton
-                  variant="secondary"
-                  onClick={disconnectWallet}
-                  className="gap-2"
-                >
-                  <div className={`w-2 h-2 rounded-full ${
-                    isMonadTestnet ? 'bg-success' : 'bg-warning'
-                  }`} />
-                  {formatAddress(account!)}
-                </TradingButton>
-                <TradingButton
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => window.open(`${networkConfig.explorerUrl}/address/${account}`, '_blank')}
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </TradingButton>
-              </div>
-            ) : (
-              <TradingButton
-                variant="trading"
-                onClick={connectWallet}
-                disabled={isConnecting}
-                className="gap-2"
-              >
-                <Wallet className="w-4 h-4" />
-                {isConnecting ? "Connecting..." : "Connect Wallet"}
-              </TradingButton>
-            )}
+            <ConnectButton
+              client={client}
+              connectButton={{ label: "Connect Wallet" }}
+              connectModal={{
+                privacyPolicyUrl: "https://kerdium.vercel.app/about",
+                size: "compact",
+                termsOfServiceUrl: "https://kerdium.vercel.app/faq",
+                title: "KERDIUM FINANCE",
+              }}
+              wallets={wallets}
+            />
           </div>
 
           {/* Mobile Menu */}

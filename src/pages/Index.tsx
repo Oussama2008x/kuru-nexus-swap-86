@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { SwapInterface } from '@/components/swap/SwapInterface';
+import { SimpleSwapInterface } from '@/components/swap/SimpleSwapInterface';
 
 const Index = () => {
   return (
@@ -23,7 +23,7 @@ const Index = () => {
 
         {/* Main Trading Interface */}
         <div className="flex justify-center">
-          <SwapInterface />
+          <SimpleSwapInterface />
         </div>
       </main>
       <Footer />

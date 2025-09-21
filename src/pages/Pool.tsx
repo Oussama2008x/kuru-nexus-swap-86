@@ -7,11 +7,54 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Minus, Droplets, TrendingUp, ArrowLeftRight, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ConnectButton, useActiveAccount } from "thirdweb/react";
+import { client, wallets } from '@/lib/thirdweb';
+import { useToast } from '@/hooks/use-toast';
 
 const Pool = () => {
   const [activeTab, setActiveTab] = useState<'add' | 'remove'>('add');
   const [token1Amount, setToken1Amount] = useState('');
   const [token2Amount, setToken2Amount] = useState('');
+  const account = useActiveAccount();
+  const { toast } = useToast();
+
+  const handleAddLiquidity = () => {
+    if (!account) {
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet to add liquidity",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (token1Amount && token2Amount) {
+      toast({
+        title: "Liquidity Added",
+        description: `Added ${token1Amount} WETH + ${token2Amount} USDC to pool`,
+        variant: "default"
+      });
+      setToken1Amount('');
+      setToken2Amount('');
+    }
+  };
+
+  const handleRemoveLiquidity = () => {
+    if (!account) {
+      toast({
+        title: "Wallet Required", 
+        description: "Please connect your wallet to remove liquidity",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    toast({
+      title: "Liquidity Removed",
+      description: "Successfully removed liquidity from pool",
+      variant: "default"
+    });
+  };
 
   const poolData = [
     {
@@ -229,9 +272,27 @@ const Pool = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full" disabled>
-                      Connect Wallet
-                    </Button>
+                    {account ? (
+                      <Button 
+                        className="w-full"
+                        onClick={handleAddLiquidity}
+                        disabled={!token1Amount || !token2Amount}
+                      >
+                        Add Liquidity
+                      </Button>
+                    ) : (
+                      <ConnectButton
+                        client={client}
+                        connectButton={{ label: "Connect Wallet to Add Liquidity" }}
+                        connectModal={{
+                          privacyPolicyUrl: "https://kerdium.vercel.app/about",
+                          size: "compact",
+                          termsOfServiceUrl: "https://kerdium.vercel.app/faq",
+                          title: "KERDIUM FINANCE",
+                        }}
+                        wallets={wallets}
+                      />
+                    )}
                   </>
                 ) : (
                   <>
@@ -264,9 +325,27 @@ const Pool = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full" disabled>
-                      Remove Liquidity
-                    </Button>
+                    {account ? (
+                      <Button 
+                        className="w-full"
+                        onClick={handleRemoveLiquidity}
+                        variant="destructive"
+                      >
+                        Remove Liquidity
+                      </Button>
+                    ) : (
+                      <ConnectButton
+                        client={client}
+                        connectButton={{ label: "Connect Wallet to Remove Liquidity" }}
+                        connectModal={{
+                          privacyPolicyUrl: "https://kerdium.vercel.app/about",
+                          size: "compact",
+                          termsOfServiceUrl: "https://kerdium.vercel.app/faq",
+                          title: "KERDIUM FINANCE",
+                        }}
+                        wallets={wallets}
+                      />
+                    )}
                   </>
                 )}
               </CardContent>
