@@ -55,9 +55,6 @@ export const Header: React.FC = () => {
               </span>
             </div>
           </div>
-          <Badge variant="secondary" className="text-xs">
-            Monad
-          </Badge>
         </div>
 
         {/* Navigation */}
@@ -102,7 +99,7 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Wallet Connection */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Network Indicator */}
           <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border/50">
             <div className={`w-2 h-2 rounded-full animate-pulse ${networkStatus.color}`} />
@@ -127,10 +124,6 @@ export const Header: React.FC = () => {
             <ThemeToggle />
           </div>
           
-          {/* Language Selector - Desktop Only */}
-          <div className="hidden md:block">
-            <LanguageSelector />
-          </div>
 
           {/* Wallet Button - Desktop Only */}
           <div className="hidden md:block">
