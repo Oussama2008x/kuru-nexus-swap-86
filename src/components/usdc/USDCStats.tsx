@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, TrendingUp, TrendingDown, Activity, Coins } from 'lucide-react';
-import { usdcService } from '@/services/usdcService';
 
 interface USDCData {
   price: number;
@@ -18,27 +17,16 @@ export const USDCStats = () => {
   const [monadPrice, setMonadPrice] = useState<number>(0);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [marketData, monPrice] = await Promise.all([
-          usdcService.getUSDCMarketData(),
-          usdcService.getMonadPrice()
-        ]);
-        setUsdcData(marketData);
-        setMonadPrice(monPrice);
-      } catch (error) {
-        console.error('Error fetching USDC data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    
-    // Refresh data every 30 seconds
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
+    // Mock data for display
+    setUsdcData({
+      price: 1.0,
+      marketCap: 34200000000,
+      volume24h: 2100000000,
+      circulatingSupply: 34200000000,
+      priceChange24h: 0.02
+    });
+    setMonadPrice(0.85);
+    setLoading(false);
   }, []);
 
   const formatNumber = (num: number): string => {
@@ -158,36 +146,22 @@ export const USDCStats = () => {
           </CardContent>
         </Card>
 
-        {/* Monad Price Reference */}
-        <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5">
+        {/* Contract Address */}
+        <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5 md:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">سعر MON</CardTitle>
-            <DollarSign className="h-4 w-4 text-primary" />
+            <CardTitle className="text-sm font-medium">عنوان العقد</CardTitle>
+            <Activity className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${monadPrice.toFixed(6)}</div>
-            <p className="text-xs text-muted-foreground">
-              1 MON = {monadPrice.toFixed(6)} USD
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* USDC to MON Conversion */}
-        <Card className="border-secondary/20 bg-gradient-to-br from-background to-secondary/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">تحويل USDC/MON</CardTitle>
-            <Activity className="h-4 w-4 text-secondary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{(1 / monadPrice).toFixed(4)}</div>
-            <p className="text-xs text-muted-foreground">
-              1 USDC = {(1 / monadPrice).toFixed(4)} MON
+            <div className="text-sm font-mono break-all">0x13C944aF2de88DA97Bc5BBEB831cDfFaF9ee52e8</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              عقد USDC على شبكة Monad Testnet
             </p>
           </CardContent>
         </Card>
 
         {/* Status Badge */}
-        <Card className="border-accent/20 bg-gradient-to-br from-background to-accent/5">
+        <Card className="border-accent/20 bg-gradient-to-br from-background to-accent/5 md:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">حالة العملة</CardTitle>
             <Coins className="h-4 w-4 text-accent" />
@@ -198,20 +172,6 @@ export const USDCStats = () => {
             </Badge>
             <p className="text-xs text-muted-foreground mt-2">
               عملة مستقرة مربوطة بالدولار
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Network Info */}
-        <Card className="border-muted/20 bg-gradient-to-br from-background to-muted/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">الشبكة</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Monad</div>
-            <p className="text-xs text-muted-foreground">
-              شبكة Monad Testnet
             </p>
           </CardContent>
         </Card>

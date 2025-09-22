@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TradingButton } from "@/components/ui/trading-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowDownUp, Settings } from 'lucide-react';
 import { ConnectButton, useActiveAccount } from "thirdweb/react";
-import { client, wallets } from '@/lib/thirdweb';
+import { client, wallets, monadTestnet } from '@/lib/thirdweb';
 import { useToast } from '@/hooks/use-toast';
+import { useUniswapSwap } from '@/hooks/useUniswapSwap';
 
 const TOKENS = [
-  { symbol: 'ETH', name: 'Ethereum', price: 3200 },
-  { symbol: 'USDC', name: 'USD Coin', price: 1 },
-  { symbol: 'WBTC', name: 'Wrapped Bitcoin', price: 65000 },
+  { symbol: 'TOKEN1', name: 'Token 1', address: '0x517C7b2c5ab04Fe60f481bdDEC07D3f1fccDF489' },
+  { symbol: 'TOKEN2', name: 'Token 2', address: '0x13C944aF2de88DA97Bc5BBEB831cDfFaF9ee52e8' },
+  { symbol: 'WMON', name: 'Wrapped MON', address: '0x92907055EA5FFb809aE9809dF4c193fa345Ebac1' },
 ];
 
 export const SimpleSwapInterface: React.FC = () => {
@@ -22,16 +23,23 @@ export const SimpleSwapInterface: React.FC = () => {
   const [slippage, setSlippage] = useState('0.5');
   const account = useActiveAccount();
   const { toast } = useToast();
+  const { executeSwap, getAmountsOut, isLoading } = useUniswapSwap();
 
-  const calculateToAmount = (amount: string) => {
-    if (!amount || isNaN(Number(amount))) return '';
-    const rate = fromToken.price / toToken.price;
-    return (Number(amount) * rate).toFixed(6);
-  };
-
-  const handleFromAmountChange = (value: string) => {
+  const handleFromAmountChange = async (value: string) => {
     setFromAmount(value);
-    setToAmount(calculateToAmount(value));
+    
+    if (value && !isNaN(Number(value)) && Number(value) > 0) {
+      try {
+        const path = [fromToken.address, toToken.address];
+        const expectedOutput = await getAmountsOut(value, path);
+        setToAmount(expectedOutput);
+      } catch (error) {
+        console.error('Error calculating output:', error);
+        setToAmount('');
+      }
+    } else {
+      setToAmount('');
+    }
   };
 
   const handleSwapTokens = () => {
@@ -41,7 +49,7 @@ export const SimpleSwapInterface: React.FC = () => {
     setToAmount(fromAmount);
   };
 
-  const handleSwap = () => {
+  const handleSwap = async () => {
     if (!account) {
       toast({
         title: "Wallet Required",
@@ -51,10 +59,20 @@ export const SimpleSwapInterface: React.FC = () => {
       return;
     }
 
-    toast({
-      title: "Swap Initiated",
-      description: `Swapping ${fromAmount} ${fromToken.symbol} for ${toAmount} ${toToken.symbol}`,
-      variant: "default"
+    if (!fromAmount || !toAmount) {
+      toast({
+        title: "Invalid Amount",
+        description: "Please enter a valid amount to swap",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    await executeSwap({
+      fromToken: fromToken.symbol,
+      toToken: toToken.symbol,
+      fromAmount,
+      slippage,
     });
   };
 
@@ -149,10 +167,10 @@ export const SimpleSwapInterface: React.FC = () => {
             variant="trading"
             size="lg"
             onClick={handleSwap}
-            disabled={!fromAmount || !toAmount}
+            disabled={!fromAmount || !toAmount || isLoading}
             className="w-full"
           >
-            Swap {fromToken.symbol} for {toToken.symbol}
+            {isLoading ? 'Processing...' : `Swap ${fromToken.symbol} for ${toToken.symbol}`}
           </TradingButton>
         ) : (
           <ConnectButton
@@ -165,6 +183,7 @@ export const SimpleSwapInterface: React.FC = () => {
               title: "KERDIUM FINANCE",
             }}
             wallets={wallets}
+            chain={monadTestnet}
           />
         )}
       </CardContent>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, TrendingUp, TrendingDown, Activity, Coins, Zap } from 'lucide-react';
-import { wethService } from '@/services/wethService';
 
 interface WETHData {
   price: number;
@@ -19,27 +18,17 @@ export const WETHStats = () => {
   const [monadPrice, setMonadPrice] = useState<number>(0);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [marketData, monPrice] = await Promise.all([
-          wethService.getWETHMarketData(),
-          wethService.getMonadPrice()
-        ]);
-        setWethData(marketData);
-        setMonadPrice(monPrice);
-      } catch (error) {
-        console.error('Error fetching WETH data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    
-    // Refresh data every 30 seconds
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
+    // Mock data for display
+    setWethData({
+      price: 3200,
+      marketCap: 384000000000,
+      volume24h: 15200000000,
+      circulatingSupply: 120000000,
+      priceChange24h: 1.8,
+      ethPrice: 3200
+    });
+    setMonadPrice(0.85);
+    setLoading(false);
   }, []);
 
   const formatNumber = (num: number): string => {
@@ -145,74 +134,16 @@ export const WETHStats = () => {
           </CardContent>
         </Card>
 
-        {/* Circulating Supply */}
+        {/* Contract Address */}
         <Card className="border-muted/20 bg-gradient-to-br from-background to-muted/5">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">المعروض المتداول</CardTitle>
+            <CardTitle className="text-sm font-medium">عنوان العقد</CardTitle>
             <Coins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatSupply(wethData.circulatingSupply)}</div>
+            <div className="text-sm font-mono break-all">0x92907055EA5FFb809aE9809dF4c193fa345Ebac1</div>
             <p className="text-xs text-muted-foreground">
-              WETH في التداول
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* ETH Reference Price */}
-        <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">سعر ETH</CardTitle>
-            <Zap className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${wethData.ethPrice.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
-              1 ETH = 1 WETH
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* MON Price Reference */}
-        <Card className="border-secondary/20 bg-gradient-to-br from-background to-secondary/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">سعر MON</CardTitle>
-            <DollarSign className="h-4 w-4 text-secondary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${monadPrice.toFixed(6)}</div>
-            <p className="text-xs text-muted-foreground">
-              1 MON = {monadPrice.toFixed(6)} USD
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* WETH to MON Conversion */}
-        <Card className="border-accent/20 bg-gradient-to-br from-background to-accent/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">تحويل WETH/MON</CardTitle>
-            <Activity className="h-4 w-4 text-accent" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{(wethData.price / monadPrice).toFixed(0)}</div>
-            <p className="text-xs text-muted-foreground">
-              1 WETH = {(wethData.price / monadPrice).toFixed(0)} MON
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Status Badge */}
-        <Card className="border-muted/20 bg-gradient-to-br from-background to-muted/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">نوع العملة</CardTitle>
-            <Coins className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <Badge variant="secondary" className="text-sm">
-              مغلفة
-            </Badge>
-            <p className="text-xs text-muted-foreground mt-2">
-              إثيريوم مغلف بـ ERC-20
+              عقد WETH على شبكة Monad Testnet
             </p>
           </CardContent>
         </Card>

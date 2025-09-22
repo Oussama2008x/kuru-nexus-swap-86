@@ -3,9 +3,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { wbtcService, WBTCStats as WBTCStatsType, WBTCContractInfo } from '@/services/wbtcService';
 import { useToast } from "@/hooks/use-toast";
 import { TrendingUp, TrendingDown, Coins, Activity, Users, DollarSign } from 'lucide-react';
+
+interface WBTCStatsType {
+  price: number;
+  priceChange24h: number;
+  volume24h: number;
+  marketCap: number;
+  circulatingSupply: number;
+}
+
+interface WBTCContractInfo {
+  name: string;
+  symbol: string;
+  decimals: number;
+  totalSupply: string;
+  contractAddress: string;
+}
 
 export const WBTCStats = () => {
   const [stats, setStats] = useState<WBTCStatsType | null>(null);
@@ -14,31 +29,25 @@ export const WBTCStats = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadWBTCData();
-    const interval = setInterval(loadWBTCData, 30000); // Update every 30 seconds
-    return () => clearInterval(interval);
+    // Mock data for display
+    setStats({
+      price: 65432,
+      priceChange24h: 2.5,
+      volume24h: 890000000,
+      marketCap: 12800000000,
+      circulatingSupply: 155420
+    });
+    
+    setContractInfo({
+      name: "Wrapped Bitcoin",
+      symbol: "WBTC",
+      decimals: 18,
+      totalSupply: "155420.0",
+      contractAddress: "0x517C7b2c5ab04Fe60f481bdDEC07D3f1fccDF489"
+    });
+    
+    setLoading(false);
   }, []);
-
-  const loadWBTCData = async () => {
-    try {
-      const [statsData, contractData] = await Promise.all([
-        wbtcService.getWBTCStats(),
-        wbtcService.getContractInfo()
-      ]);
-      
-      setStats(statsData);
-      setContractInfo(contractData);
-    } catch (error) {
-      console.error('Error loading WBTC data:', error);
-      toast({
-        title: "خطأ في تحميل بيانات WBTC",
-        description: "حدث خطأ أثناء تحميل بيانات WBTC. سيتم المحاولة مرة أخرى.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const formatNumber = (num: number): string => {
     if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
@@ -223,14 +232,11 @@ export const WBTCStats = () => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={() => window.open(`https://monad.explorer.com/address/${contractInfo.contractAddress}`, '_blank')}>
+            <Button variant="outline" onClick={() => window.open(`https://testnet-explorer.monad.xyz/address/${contractInfo.contractAddress}`, '_blank')}>
               عرض في Explorer
             </Button>
             <Button variant="outline" onClick={() => window.open('/swap', '_self')}>
               تداول WBTC
-            </Button>
-            <Button variant="outline" onClick={loadWBTCData}>
-              تحديث البيانات
             </Button>
           </div>
         </CardContent>
