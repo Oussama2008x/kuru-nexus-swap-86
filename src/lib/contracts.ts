@@ -1419,7 +1419,7 @@ export const ERC20_ABI = [
 
 // Monad Testnet configuration
 export const MONAD_TESTNET = {
-  chainId: 41454,
+  chainId: 10143,
   name: "Monad Testnet",
   rpcUrl: "https://testnet-rpc.monad.xyz",
   blockExplorer: "https://testnet.monadexplorer.com",
