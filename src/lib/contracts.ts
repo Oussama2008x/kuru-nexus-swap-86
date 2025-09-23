@@ -1422,7 +1422,7 @@ export const MONAD_TESTNET = {
   chainId: 41454,
   name: "Monad Testnet",
   rpcUrl: "https://testnet-rpc.monad.xyz",
-  blockExplorer: "https://testnet-explorer.monad.xyz",
+  blockExplorer: "https://testnet.monadexplorer.com",
   nativeCurrency: {
     name: "MON",
     symbol: "MON",
