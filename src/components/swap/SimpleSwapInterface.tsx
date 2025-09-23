@@ -8,12 +8,7 @@ import { ConnectButton, useActiveAccount } from "thirdweb/react";
 import { client, wallets, monadTestnet } from '@/lib/thirdweb';
 import { useToast } from '@/hooks/use-toast';
 import { useUniswapSwap } from '@/hooks/useUniswapSwap';
-
-const TOKENS = [
-  { symbol: 'TOKEN1', name: 'Token 1', address: '0x517C7b2c5ab04Fe60f481bdDEC07D3f1fccDF489' },
-  { symbol: 'TOKEN2', name: 'Token 2', address: '0x13C944aF2de88DA97Bc5BBEB831cDfFaF9ee52e8' },
-  { symbol: 'WMON', name: 'Wrapped MON', address: '0x92907055EA5FFb809aE9809dF4c193fa345Ebac1' },
-];
+import { TOKENS } from '@/lib/contracts';
 
 export const SimpleSwapInterface: React.FC = () => {
   const [fromToken, setFromToken] = useState(TOKENS[0]);

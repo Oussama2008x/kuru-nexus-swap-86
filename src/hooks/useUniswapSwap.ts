@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
 import { useActiveAccount } from 'thirdweb/react';
-import { CONTRACTS, ROUTER_ABI, ERC20_ABI } from '@/lib/contracts';
+import { CONTRACTS, ROUTER_ABI, ERC20_ABI, TOKENS } from '@/lib/contracts';
 import { useToast } from '@/hooks/use-toast';
 
 export interface SwapParams {
@@ -70,12 +70,11 @@ export const useUniswapSwap = () => {
       const signer = await getSigner();
       const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, signer);
       
-      // Map token symbols to addresses
-      const tokenAddresses: { [key: string]: string } = {
-        'TOKEN1': CONTRACTS.token1,
-        'TOKEN2': CONTRACTS.token2,
-        'WMON': CONTRACTS.wmon,
-      };
+      // Map token symbols to addresses from TOKENS array
+      const tokenAddresses: { [key: string]: string } = {};
+      TOKENS.forEach(token => {
+        tokenAddresses[token.symbol] = token.address;
+      });
       
       const fromTokenAddress = tokenAddresses[fromToken];
       const toTokenAddress = tokenAddresses[toToken];
