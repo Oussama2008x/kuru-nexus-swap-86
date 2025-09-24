@@ -90,42 +90,73 @@ export const useUniswapSwap = () => {
       
       await approveToken(fromTokenAddress, CONTRACTS.router, fromAmount, fromTokenObj.decimals);
       
-      // 2. Determine swap path - direct or through WMON if no direct pair
-      let path = [fromTokenAddress, toTokenAddress];
-      
-      // If tokens are not WMON and different, try path through WMON
-      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
-      if (wmonToken && fromTokenAddress !== wmonToken.address && toTokenAddress !== wmonToken.address) {
-        // Try direct path first, if it fails, use WMON path
+      // 2. Determine swap path dynamically (direct, via wrapped token, or via USDC)
+      const amountInWei = ethers.parseUnits(fromAmount, fromTokenObj.decimals);
+
+      // Ask router for its canonical wrapped native token (often named WETH in ABI)
+      let wrappedAddress: string | null = null;
+      try {
+        wrappedAddress = await routerContract.WETH();
+      } catch {
+        // Fallback to WMON from TOKENS if router.WETH() not available
+        const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+        wrappedAddress = wmonToken?.address ?? null;
+      }
+
+      // Candidate intermediary like USDC
+      const usdc = TOKENS.find(t => t.symbol === 'USDC');
+
+      const candidatePaths: string[][] = [];
+      // Direct
+      candidatePaths.push([fromTokenAddress, toTokenAddress]);
+      // Via wrapped
+      if (wrappedAddress && fromTokenAddress !== wrappedAddress && toTokenAddress !== wrappedAddress) {
+        candidatePaths.push([fromTokenAddress, wrappedAddress, toTokenAddress]);
+      }
+      // Via USDC
+      if (usdc && usdc.address !== fromTokenAddress && usdc.address !== toTokenAddress) {
+        candidatePaths.push([fromTokenAddress, usdc.address, toTokenAddress]);
+      }
+
+      // Probe paths to find the first route with liquidity
+      let selectedPath: string[] | null = null;
+      let expectedOutput = '0';
+      for (const p of candidatePaths) {
         try {
-          await getAmountsOut(fromAmount, path, fromTokenObj.decimals, toTokenObj.decimals);
+          const amounts = await routerContract.getAmountsOut(amountInWei, p);
+          const outWei = amounts[amounts.length - 1];
+          // Guard against zero outputs
+          if (outWei > 0n) {
+            expectedOutput = ethers.formatUnits(outWei, toTokenObj.decimals);
+            selectedPath = p;
+            break;
+          }
         } catch {
-          // Use path through WMON
-          path = [fromTokenAddress, wmonToken.address, toTokenAddress];
+          // try next path
         }
       }
-      
-      // 3. Get expected output amount
-      const expectedOutput = await getAmountsOut(fromAmount, path, fromTokenObj.decimals, toTokenObj.decimals);
-      
-      // 4. Calculate minimum output with slippage
+
+      if (!selectedPath) {
+        throw new Error('No route with sufficient liquidity between selected tokens');
+      }
+
+      // 3. Calculate minimum output with slippage
       const slippageMultiplier = (100 - parseFloat(slippage)) / 100;
       const minOutput = (parseFloat(expectedOutput) * slippageMultiplier).toString();
       const minOutputWei = ethers.parseUnits(minOutput, toTokenObj.decimals);
-      
-      // 5. Execute swap
+
+      // 4. Execute swap
       toast({
         title: "Executing Swap",
         description: "Please confirm the swap transaction...",
       });
-      
-      const amountInWei = ethers.parseUnits(fromAmount, fromTokenObj.decimals);
+
       const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
-      
+
       const tx = await routerContract.swapExactTokensForTokens(
         amountInWei,
         minOutputWei,
-        path,
+        selectedPath,
         account.address,
         deadline
       );
