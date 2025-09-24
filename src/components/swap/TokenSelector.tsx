@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search } from 'lucide-react';
@@ -50,6 +50,7 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Select Token</DialogTitle>
+          <DialogDescription>Choose a token from the list below.</DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
