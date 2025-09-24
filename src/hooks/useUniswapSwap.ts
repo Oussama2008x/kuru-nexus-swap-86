@@ -28,12 +28,12 @@ export const useUniswapSwap = () => {
     return await provider.getSigner();
   };
 
-  const approveToken = async (tokenAddress: string, spenderAddress: string, amount: string) => {
+  const approveToken = async (tokenAddress: string, spenderAddress: string, amount: string, decimals: number) => {
     const signer = await getSigner();
     const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, signer);
     
-    // Convert amount to wei
-    const amountInWei = ethers.parseEther(amount);
+    // Convert amount based on token decimals
+    const amountInWei = ethers.parseUnits(amount, decimals);
     
     // Check current allowance
     const currentAllowance = await tokenContract.allowance(account?.address, spenderAddress);
@@ -42,21 +42,22 @@ export const useUniswapSwap = () => {
       return true; // Already approved
     }
     
-    // Approve transaction
-    const tx = await tokenContract.approve(spenderAddress, amountInWei);
+    // Approve max amount to avoid repeated approvals
+    const maxAmount = ethers.MaxUint256;
+    const tx = await tokenContract.approve(spenderAddress, maxAmount);
     await tx.wait();
     
     return true;
   };
 
-  const getAmountsOut = async (amountIn: string, path: string[]) => {
+  const getAmountsOut = async (amountIn: string, path: string[], fromDecimals: number, toDecimals: number) => {
     const provider = getProvider();
     const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, provider);
     
-    const amountInWei = ethers.parseEther(amountIn);
+    const amountInWei = ethers.parseUnits(amountIn, fromDecimals);
     const amounts = await routerContract.getAmountsOut(amountInWei, path);
     
-    return ethers.formatEther(amounts[amounts.length - 1]);
+    return ethers.formatUnits(amounts[amounts.length - 1], toDecimals);
   };
 
   const executeSwap = async ({ fromToken, toToken, fromAmount, slippage }: SwapParams) => {
@@ -70,18 +71,16 @@ export const useUniswapSwap = () => {
       const signer = await getSigner();
       const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, signer);
       
-      // Map token symbols to addresses from TOKENS array
-      const tokenAddresses: { [key: string]: string } = {};
-      TOKENS.forEach(token => {
-        tokenAddresses[token.symbol] = token.address;
-      });
+      // Find token objects from TOKENS array
+      const fromTokenObj = TOKENS.find(token => token.symbol === fromToken);
+      const toTokenObj = TOKENS.find(token => token.symbol === toToken);
       
-      const fromTokenAddress = tokenAddresses[fromToken];
-      const toTokenAddress = tokenAddresses[toToken];
-      
-      if (!fromTokenAddress || !toTokenAddress) {
+      if (!fromTokenObj || !toTokenObj) {
         throw new Error('Invalid token selection');
       }
+      
+      const fromTokenAddress = fromTokenObj.address;
+      const toTokenAddress = toTokenObj.address;
       
       // 1. Approve router to spend tokens
       toast({
@@ -89,24 +88,38 @@ export const useUniswapSwap = () => {
         description: "Please confirm the approval transaction...",
       });
       
-      await approveToken(fromTokenAddress, CONTRACTS.router, fromAmount);
+      await approveToken(fromTokenAddress, CONTRACTS.router, fromAmount, fromTokenObj.decimals);
       
-      // 2. Get expected output amount
-      const path = [fromTokenAddress, toTokenAddress];
-      const expectedOutput = await getAmountsOut(fromAmount, path);
+      // 2. Determine swap path - direct or through WMON if no direct pair
+      let path = [fromTokenAddress, toTokenAddress];
       
-      // 3. Calculate minimum output with slippage
+      // If tokens are not WMON and different, try path through WMON
+      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+      if (wmonToken && fromTokenAddress !== wmonToken.address && toTokenAddress !== wmonToken.address) {
+        // Try direct path first, if it fails, use WMON path
+        try {
+          await getAmountsOut(fromAmount, path, fromTokenObj.decimals, toTokenObj.decimals);
+        } catch {
+          // Use path through WMON
+          path = [fromTokenAddress, wmonToken.address, toTokenAddress];
+        }
+      }
+      
+      // 3. Get expected output amount
+      const expectedOutput = await getAmountsOut(fromAmount, path, fromTokenObj.decimals, toTokenObj.decimals);
+      
+      // 4. Calculate minimum output with slippage
       const slippageMultiplier = (100 - parseFloat(slippage)) / 100;
       const minOutput = (parseFloat(expectedOutput) * slippageMultiplier).toString();
-      const minOutputWei = ethers.parseEther(minOutput);
+      const minOutputWei = ethers.parseUnits(minOutput, toTokenObj.decimals);
       
-      // 4. Execute swap
+      // 5. Execute swap
       toast({
         title: "Executing Swap",
         description: "Please confirm the swap transaction...",
       });
       
-      const amountInWei = ethers.parseEther(fromAmount);
+      const amountInWei = ethers.parseUnits(fromAmount, fromTokenObj.decimals);
       const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
       
       const tx = await routerContract.swapExactTokensForTokens(
@@ -147,6 +160,12 @@ export const useUniswapSwap = () => {
         errorMessage = 'Insufficient balance or liquidity';
       } else if (error.message?.includes('slippage')) {
         errorMessage = 'Slippage tolerance exceeded';
+      } else if (error.message?.includes('TRANSFER_FROM_FAILED')) {
+        errorMessage = 'Token transfer failed - check allowance';
+      } else if (error.message?.includes('EXPIRED')) {
+        errorMessage = 'Transaction expired';
+      } else if (error.message?.includes('Pair does not exist')) {
+        errorMessage = 'Trading pair does not exist';
       }
       
       toast({
@@ -164,9 +183,70 @@ export const useUniswapSwap = () => {
     }
   };
 
+  const addLiquidity = async (tokenA: string, tokenB: string, amountA: string, amountB: string) => {
+    if (!account?.address) {
+      throw new Error('Wallet not connected');
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const signer = await getSigner();
+      const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, signer);
+      
+      const tokenAObj = TOKENS.find(token => token.symbol === tokenA);
+      const tokenBObj = TOKENS.find(token => token.symbol === tokenB);
+      
+      if (!tokenAObj || !tokenBObj) {
+        throw new Error('Invalid token selection');
+      }
+
+      // Approve both tokens
+      await approveToken(tokenAObj.address, CONTRACTS.router, amountA, tokenAObj.decimals);
+      await approveToken(tokenBObj.address, CONTRACTS.router, amountB, tokenBObj.decimals);
+
+      const amountAWei = ethers.parseUnits(amountA, tokenAObj.decimals);
+      const amountBWei = ethers.parseUnits(amountB, tokenBObj.decimals);
+      const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
+
+      const tx = await routerContract.addLiquidity(
+        tokenAObj.address,
+        tokenBObj.address,
+        amountAWei,
+        amountBWei,
+        0, // amountAMin
+        0, // amountBMin
+        account.address,
+        deadline
+      );
+
+      await tx.wait();
+      
+      toast({
+        title: "Liquidity Added!",
+        description: `Added liquidity for ${tokenA}/${tokenB} pair`,
+      });
+
+      return { success: true, txHash: tx.hash };
+    } catch (error: any) {
+      console.error('Add liquidity error:', error);
+      
+      toast({
+        title: "Add Liquidity Failed",
+        description: error.message || 'Failed to add liquidity',
+        variant: "destructive",
+      });
+
+      return { success: false, error: error.message };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     executeSwap,
     getAmountsOut,
+    addLiquidity,
     isLoading,
   };
 };

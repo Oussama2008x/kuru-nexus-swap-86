@@ -8,10 +8,12 @@ import { ConnectButton, useActiveAccount } from "thirdweb/react";
 import { client, wallets, monadTestnet } from '@/lib/thirdweb';
 import { useToast } from '@/hooks/use-toast';
 import { useUniswapSwap } from '@/hooks/useUniswapSwap';
+import { useTokenBalance } from '@/hooks/useTokenBalance';
 import { TOKENS } from '@/lib/contracts';
 import { calculateTokenAmount, getTokenPrice } from '@/lib/tokenPrices';
 import { TokenSelector } from './TokenSelector';
 import { SwapSettings } from './SwapSettings';
+import { PercentageButtons } from './PercentageButtons';
 
 export const SimpleSwapInterface: React.FC = () => {
   const [fromToken, setFromToken] = useState(TOKENS[0]);
@@ -24,7 +26,8 @@ export const SimpleSwapInterface: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const account = useActiveAccount();
   const { toast } = useToast();
-  const { executeSwap, getAmountsOut, isLoading } = useUniswapSwap();
+  const { executeSwap, getAmountsOut, addLiquidity, isLoading } = useUniswapSwap();
+  const { balance: fromTokenBalance, isLoading: balanceLoading, refetch: refetchBalance } = useTokenBalance(fromToken.symbol);
 
   const handleFromAmountChange = (value: string) => {
     setFromAmount(value);
@@ -67,12 +70,32 @@ export const SimpleSwapInterface: React.FC = () => {
       return;
     }
 
-    await executeSwap({
+    // Check if user has sufficient balance
+    if (parseFloat(fromAmount) > parseFloat(fromTokenBalance)) {
+      toast({
+        title: "Insufficient Balance",
+        description: `You don't have enough ${fromToken.symbol}`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const result = await executeSwap({
       fromToken: fromToken.symbol,
       toToken: toToken.symbol,
       fromAmount,
       slippage,
     });
+
+    // Refresh balance after successful swap
+    if (result?.success) {
+      refetchBalance();
+    }
+  };
+
+  const handlePercentageAmount = (amount: string) => {
+    setFromAmount(amount);
+    handleFromAmountChange(amount);
   };
 
   return (
@@ -92,7 +115,14 @@ export const SimpleSwapInterface: React.FC = () => {
       <CardContent className="space-y-4">
         {/* From Token */}
         <div className="space-y-2">
-          <Label>From</Label>
+          <div className="flex items-center justify-between">
+            <Label>From</Label>
+            {account && (
+              <div className="text-xs text-muted-foreground">
+                Balance: {balanceLoading ? '...' : parseFloat(fromTokenBalance).toFixed(6)} {fromToken.symbol}
+              </div>
+            )}
+          </div>
           <div className="flex items-center space-x-2">
             <TradingButton
               variant="outline"
@@ -113,6 +143,16 @@ export const SimpleSwapInterface: React.FC = () => {
               className="flex-1"
             />
           </div>
+          
+          {/* Percentage Buttons */}
+          {account && (
+            <PercentageButtons
+              balance={fromTokenBalance}
+              onAmountSelect={handlePercentageAmount}
+              disabled={balanceLoading || isLoading}
+            />
+          )}
+          
           <div className="text-xs text-muted-foreground text-right">
             ≈ ${fromAmount ? (Number(fromAmount) * getTokenPrice(fromToken.symbol)).toFixed(2) : '0.00'}
           </div>
@@ -196,6 +236,9 @@ export const SimpleSwapInterface: React.FC = () => {
             const calculatedAmount = calculateTokenAmount(fromAmount, token.symbol, toToken.symbol);
             setToAmount(calculatedAmount);
           }
+          // Clear amount when switching tokens to refresh balance
+          setFromAmount('');
+          setToAmount('');
         }}
         selectedToken={fromToken}
       />

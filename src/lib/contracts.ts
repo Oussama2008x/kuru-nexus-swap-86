@@ -3,7 +3,7 @@ export const CONTRACTS = {
   router: "0x2Ab90cE11601D98CDBf8a6601521328589b79416",
 };
 
-// Token list for Monad Testnet
+// Token list for Monad Testnet - Updated with new tokens from user's list
 export const TOKENS = [
   { name: "MOYAKI", symbol: "YAKI", decimals: 18, address: "0xfe140e1dCe99Be9F4F15d657CD9b7BF622270C50" },
   { name: "Wrapped MONAD", symbol: "WMON", decimals: 18, address: "0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701" },
@@ -11,9 +11,14 @@ export const TOKENS = [
   { name: "USD Tether", symbol: "USDT", decimals: 6, address: "0x88b8E2161DEDC77EF4ab7585569D2415a1C1055D" },
   { name: "CHOG", symbol: "CHOG", decimals: 18, address: "0xE0590015A873bF326bd645c3E1266d4db41C4E6B" },
   { name: "BEAN", symbol: "BEAN", decimals: 18, address: "0x268E4E24E0051EC27b3D27A95977E71cE6875a05" },
-  { name: "Wrapped ETH", symbol: "WETH", decimals: 18, address: "0xB5a30b0FDc42e3E9760Cb8449Fb37" },
+  { name: "Wrapped ETH", symbol: "WETH", decimals: 18, address: "0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37" },
   { name: "Wrapped BTC", symbol: "WBTC", decimals: 8, address: "0xcf5a6076cfa32686c0Df13aBaDa2b40dec133F1d" },
-  { name: "Wrapped SOL", symbol: "WSOL", decimals: 9, address: "0x5387C85A4965769f6B0Df430638a1388493486F1" }
+  { name: "Wrapped SOL", symbol: "WSOL", decimals: 9, address: "0x5387C85A4965769f6B0Df430638a1388493486F1" },
+  { name: "GMON", symbol: "GMON", decimals: 18, address: "0x517C7b2c5ab04Fe60f481bdDEC07D3f1fccDF489" },
+  { name: "SHMON", symbol: "SHMON", decimals: 18, address: "0x13C944aF2de88DA97Bc5BBEB831cDfFaF9ee52e8" },
+  { name: "USDM", symbol: "USDM", decimals: 6, address: "0x92907055EA5FFb809aE9809dF4c193fa345Ebac1" },
+  { name: "DAK", symbol: "DAK", decimals: 18, address: "0x1234567890123456789012345678901234567890" }, // placeholder
+  { name: "MOON", symbol: "MOON", decimals: 18, address: "0x0987654321098765432109876543210987654321" } // placeholder
 ];
 
 export const ERC20_ABI = [
