@@ -26,16 +26,17 @@ export const SimpleSwapInterface: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const account = useActiveAccount();
   const { toast } = useToast();
-  const { executeSwap, getAmountsOut, addLiquidity, isLoading } = useUniswapSwap();
+  const { executeSwap, quoteSwap, addLiquidity, isLoading } = useUniswapSwap();
   const { balance: fromTokenBalance, isLoading: balanceLoading, refetch: refetchBalance } = useTokenBalance(fromToken.symbol);
 
   const handleFromAmountChange = (value: string) => {
     setFromAmount(value);
     
     if (value && !isNaN(Number(value)) && Number(value) > 0) {
-      // Use smart price calculation
-      const calculatedAmount = calculateTokenAmount(value, fromToken.symbol, toToken.symbol);
-      setToAmount(calculatedAmount);
+      // Get on-chain quote using router paths (WMON as base)
+      quoteSwap(fromToken.symbol, toToken.symbol, value)
+        .then(({ amountOut }) => setToAmount(amountOut))
+        .catch(() => setToAmount(''));
     } else {
       setToAmount('');
     }
@@ -233,12 +234,13 @@ export const SimpleSwapInterface: React.FC = () => {
         onSelectToken={(token) => {
           setFromToken(token);
           if (fromAmount) {
-            const calculatedAmount = calculateTokenAmount(fromAmount, token.symbol, toToken.symbol);
-            setToAmount(calculatedAmount);
+            quoteSwap(token.symbol, toToken.symbol, fromAmount)
+              .then(({ amountOut }) => setToAmount(amountOut))
+              .catch(() => setToAmount(''));
+          } else {
+            setFromAmount('');
+            setToAmount('');
           }
-          // Clear amount when switching tokens to refresh balance
-          setFromAmount('');
-          setToAmount('');
         }}
         selectedToken={fromToken}
       />
@@ -249,8 +251,9 @@ export const SimpleSwapInterface: React.FC = () => {
         onSelectToken={(token) => {
           setToToken(token);
           if (fromAmount) {
-            const calculatedAmount = calculateTokenAmount(fromAmount, fromToken.symbol, token.symbol);
-            setToAmount(calculatedAmount);
+            quoteSwap(fromToken.symbol, token.symbol, fromAmount)
+              .then(({ amountOut }) => setToAmount(amountOut))
+              .catch(() => setToAmount(''));
           }
         }}
         selectedToken={toToken}

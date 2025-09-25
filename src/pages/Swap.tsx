@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SimpleSwapInterface } from '@/components/swap/SimpleSwapInterface';
+import { LiquidityAdminTools } from '@/components/swap/LiquidityAdminTools';
 
 const Swap: React.FC = () => {
   return (
@@ -21,7 +22,11 @@ const Swap: React.FC = () => {
 
           {/* Swap Interface */}
           <div className="flex justify-center">
-            <SimpleSwapInterface />
+            <div className="w-full max-w-md">
+              <SimpleSwapInterface />
+              {/* Admin Tools */}
+              <LiquidityAdminTools />
+            </div>
           </div>
         </div>
       </main>

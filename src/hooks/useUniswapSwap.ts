@@ -326,11 +326,46 @@ export const useUniswapSwap = () => {
     }
   };
 
+  // Quote helper using same routing logic (WMON as base)
+  const quoteSwap = async (fromToken: string, toToken: string, amountIn: string) => {
+    const provider = getProvider();
+    const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, provider);
+
+    const fromTokenObj = TOKENS.find(t => t.symbol === fromToken);
+    const toTokenObj = TOKENS.find(t => t.symbol === toToken);
+    if (!fromTokenObj || !toTokenObj) throw new Error('Invalid token selection');
+
+    const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+    if (!wmonToken) throw new Error('WMON base token not found');
+
+    if (!amountIn || Number(amountIn) <= 0) return { amountOut: '0', path: [fromTokenObj.address, toTokenObj.address] };
+
+    const amountInWei = ethers.parseUnits(amountIn, fromTokenObj.decimals);
+
+    const candidatePaths: string[][] = [[fromTokenObj.address, toTokenObj.address]];
+    if (fromTokenObj.address !== wmonToken.address && toTokenObj.address !== wmonToken.address) {
+      candidatePaths.push([fromTokenObj.address, wmonToken.address, toTokenObj.address]);
+    }
+
+    for (const p of candidatePaths) {
+      try {
+        const amounts = await routerContract.getAmountsOut(amountInWei, p);
+        const outWei = amounts[amounts.length - 1];
+        if (outWei > 0n) {
+          return { amountOut: ethers.formatUnits(outWei, toTokenObj.decimals), path: p };
+        }
+      } catch {}
+    }
+
+    return { amountOut: '0', path: candidatePaths[0] };
+  };
+
   return {
     executeSwap,
     getAmountsOut,
     addLiquidity,
     createAllLiquidityPairs,
+    quoteSwap,
     isLoading,
   };
 };
