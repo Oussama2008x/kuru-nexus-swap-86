@@ -90,32 +90,23 @@ export const useUniswapSwap = () => {
       
       await approveToken(fromTokenAddress, CONTRACTS.router, fromAmount, fromTokenObj.decimals);
       
-      // 2. Determine swap path dynamically (direct, via wrapped token, or via USDC)
+      // 2. Determine swap path with WMON as primary base token
       const amountInWei = ethers.parseUnits(fromAmount, fromTokenObj.decimals);
 
-      // Ask router for its canonical wrapped native token (often named WETH in ABI)
-      let wrappedAddress: string | null = null;
-      try {
-        wrappedAddress = await routerContract.WETH();
-      } catch {
-        // Fallback to WMON from TOKENS if router.WETH() not available
-        const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
-        wrappedAddress = wmonToken?.address ?? null;
+      // Get WMON as the primary base token
+      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+      if (!wmonToken) {
+        throw new Error('WMON base token not found in token list');
       }
-
-      // Candidate intermediary like USDC
-      const usdc = TOKENS.find(t => t.symbol === 'USDC');
 
       const candidatePaths: string[][] = [];
-      // Direct
+      
+      // Direct path first
       candidatePaths.push([fromTokenAddress, toTokenAddress]);
-      // Via wrapped
-      if (wrappedAddress && fromTokenAddress !== wrappedAddress && toTokenAddress !== wrappedAddress) {
-        candidatePaths.push([fromTokenAddress, wrappedAddress, toTokenAddress]);
-      }
-      // Via USDC
-      if (usdc && usdc.address !== fromTokenAddress && usdc.address !== toTokenAddress) {
-        candidatePaths.push([fromTokenAddress, usdc.address, toTokenAddress]);
+      
+      // Via WMON (prioritized as base token)
+      if (fromTokenAddress !== wmonToken.address && toTokenAddress !== wmonToken.address) {
+        candidatePaths.push([fromTokenAddress, wmonToken.address, toTokenAddress]);
       }
 
       // Probe paths to find the first route with liquidity
@@ -274,10 +265,72 @@ export const useUniswapSwap = () => {
     }
   };
 
+  // Create liquidity pairs for all tokens using WMON as base
+  const createAllLiquidityPairs = async (customAmounts: Record<string, { tokenAmount: string, wmonAmount: string }>) => {
+    if (!account?.address) {
+      throw new Error('Wallet not connected');
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+      if (!wmonToken) {
+        throw new Error('WMON base token not found');
+      }
+
+      const results = [];
+      
+      for (const token of TOKENS) {
+        // Skip WMON itself
+        if (token.symbol === 'WMON') continue;
+        
+        const pairKey = token.symbol;
+        const amounts = customAmounts[pairKey];
+        
+        if (amounts) {
+          try {
+            console.log(`Creating liquidity pair: ${token.symbol}/WMON`);
+            const result = await addLiquidity(
+              token.symbol,
+              'WMON',
+              amounts.tokenAmount,
+              amounts.wmonAmount
+            );
+            results.push({ token: token.symbol, success: result.success, txHash: result.txHash });
+          } catch (error: any) {
+            console.error(`Failed to create ${token.symbol}/WMON pair:`, error);
+            results.push({ token: token.symbol, success: false, error: error.message });
+          }
+        }
+      }
+
+      toast({
+        title: "Liquidity Creation Complete",
+        description: `Created ${results.filter(r => r.success).length} out of ${results.length} pairs`,
+      });
+
+      return results;
+    } catch (error: any) {
+      console.error('Create all liquidity pairs failed:', error);
+      
+      toast({
+        title: "Liquidity Creation Failed",
+        description: error.message || 'Failed to create liquidity pairs',
+        variant: "destructive",
+      });
+      
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     executeSwap,
     getAmountsOut,
     addLiquidity,
+    createAllLiquidityPairs,
     isLoading,
   };
 };
