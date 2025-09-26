@@ -57,7 +57,7 @@ export const LiquidityAdminTools: React.FC = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          أدخل مبالغ مخصصة لكل زوج لتكوين السيولة تلقائيًا: TOKEN/WMON. سيتم طلب الموافقات اللازمة أثناء العملية.
+          أدخل مبالغ مخصصة لكل زوج لتكوين السيولة تلقائيًا: TOKEN/WMON. سيتم طلب الموافقة فقط للرمز المحدد (ليس WMON).
         </p>
 
         <div className="grid gap-3">

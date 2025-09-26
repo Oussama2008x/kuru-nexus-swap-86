@@ -223,9 +223,13 @@ export const useUniswapSwap = () => {
         throw new Error('Invalid token selection');
       }
 
-      // Approve both tokens
-      await approveToken(tokenAObj.address, CONTRACTS.router, amountA, tokenAObj.decimals);
-      await approveToken(tokenBObj.address, CONTRACTS.router, amountB, tokenBObj.decimals);
+      // Only approve non-WMON tokens when WMON is involved
+      if (tokenA !== 'WMON') {
+        await approveToken(tokenAObj.address, CONTRACTS.router, amountA, tokenAObj.decimals);
+      }
+      if (tokenB !== 'WMON') {
+        await approveToken(tokenBObj.address, CONTRACTS.router, amountB, tokenBObj.decimals);
+      }
 
       const amountAWei = ethers.parseUnits(amountA, tokenAObj.decimals);
       const amountBWei = ethers.parseUnits(amountB, tokenBObj.decimals);
