@@ -2,6 +2,9 @@
 export const CONTRACTS = {
   router: "0x2Ab90cE11601D98CDBf8a6601521328589b79416",
 };
+export const CONTRACTS = {
+  factory : "0xc23AE281FFCC9cce6F40C0cd4a2fC06BCca90521",
+};
 
 // Token list for Monad Testnet - Updated with new tokens from user's list
 export const TOKENS = [
