@@ -5,7 +5,9 @@ export const CONTRACTS = {
 export const CONTRACTS = {
   factory : "0xc23AE281FFCC9cce6F40C0cd4a2fC06BCca90521",
 };
-
+export const CONTRACTS = {
+  multicall : "0x6A6166957b2366056326f29C15b44573D60686E0",
+};
 // Token list for Monad Testnet - Updated with new tokens from user's list
 export const TOKENS = [
   { name: "MOYAKI", symbol: "YAKI", decimals: 18, address: "0xfe140e1dCe99Be9F4F15d657CD9b7BF622270C50" },
