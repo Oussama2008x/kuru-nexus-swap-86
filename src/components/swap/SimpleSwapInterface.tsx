@@ -14,6 +14,7 @@ import { calculateTokenAmount, getTokenPrice } from '@/lib/tokenPrices';
 import { TokenSelector } from './TokenSelector';
 import { SwapSettings } from './SwapSettings';
 import { PercentageButtons } from './PercentageButtons';
+import { TransactionSummary } from './TransactionSummary';
 
 export const SimpleSwapInterface: React.FC = () => {
   const [fromToken, setFromToken] = useState(TOKENS[0]);
@@ -24,6 +25,7 @@ export const SimpleSwapInterface: React.FC = () => {
   const [showFromTokenSelector, setShowFromTokenSelector] = useState(false);
   const [showToTokenSelector, setShowToTokenSelector] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [routePath, setRoutePath] = useState<string[]>([]);
   const account = useActiveAccount();
   const { toast } = useToast();
   const { executeSwap, quoteSwap, addLiquidity, isLoading } = useUniswapSwap();
@@ -35,10 +37,17 @@ export const SimpleSwapInterface: React.FC = () => {
     if (value && !isNaN(Number(value)) && Number(value) > 0) {
       // Get on-chain quote using router paths (WMON as base)
       quoteSwap(fromToken.symbol, toToken.symbol, value)
-        .then(({ amountOut }) => setToAmount(amountOut))
-        .catch(() => setToAmount(''));
+        .then(({ amountOut, path }) => {
+          setToAmount(amountOut);
+          setRoutePath(path || []);
+        })
+        .catch(() => {
+          setToAmount('');
+          setRoutePath([]);
+        });
     } else {
       setToAmount('');
+      setRoutePath([]);
     }
   };
 
@@ -199,6 +208,17 @@ export const SimpleSwapInterface: React.FC = () => {
           </div>
         </div>
 
+        {/* Transaction Summary */}
+        {fromAmount && toAmount && (
+          <TransactionSummary
+            fromToken={fromToken}
+            toToken={toToken}
+            fromAmount={fromAmount}
+            toAmount={toAmount}
+            slippage={slippage}
+            routePath={routePath}
+          />
+        )}
 
         {/* Action Button */}
         {account ? (
@@ -235,11 +255,18 @@ export const SimpleSwapInterface: React.FC = () => {
           setFromToken(token);
           if (fromAmount) {
             quoteSwap(token.symbol, toToken.symbol, fromAmount)
-              .then(({ amountOut }) => setToAmount(amountOut))
-              .catch(() => setToAmount(''));
+              .then(({ amountOut, path }) => {
+                setToAmount(amountOut);
+                setRoutePath(path || []);
+              })
+              .catch(() => {
+                setToAmount('');
+                setRoutePath([]);
+              });
           } else {
             setFromAmount('');
             setToAmount('');
+            setRoutePath([]);
           }
         }}
         selectedToken={fromToken}
@@ -252,8 +279,14 @@ export const SimpleSwapInterface: React.FC = () => {
           setToToken(token);
           if (fromAmount) {
             quoteSwap(fromToken.symbol, token.symbol, fromAmount)
-              .then(({ amountOut }) => setToAmount(amountOut))
-              .catch(() => setToAmount(''));
+              .then(({ amountOut, path }) => {
+                setToAmount(amountOut);
+                setRoutePath(path || []);
+              })
+              .catch(() => {
+                setToAmount('');
+                setRoutePath([]);
+              });
           }
         }}
         selectedToken={toToken}
