@@ -24,6 +24,14 @@ export const useTokenBalance = (tokenSymbol: string) => {
       const token = TOKENS.find(t => t.symbol === tokenSymbol);
       
       if (!token) {
+        console.error('Token not found:', tokenSymbol);
+        setBalance('0');
+        return;
+      }
+
+      // Check for placeholder addresses
+      if (token.address.startsWith('0x1234') || token.address.startsWith('0x0987')) {
+        console.warn('Placeholder token address detected for:', tokenSymbol);
         setBalance('0');
         return;
       }
@@ -35,7 +43,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
       const formattedBalance = ethers.formatUnits(balanceWei, token.decimals);
       setBalance(formattedBalance);
     } catch (error) {
-      console.error('Error fetching balance:', error);
+      console.error('Error fetching balance for', tokenSymbol, ':', error);
       setBalance('0');
     } finally {
       setIsLoading(false);

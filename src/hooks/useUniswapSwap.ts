@@ -78,11 +78,17 @@ export const useUniswapSwap = () => {
       if (!fromTokenObj || !toTokenObj) {
         throw new Error('Invalid token selection');
       }
+
+      // Check for placeholder addresses
+      if (fromTokenObj.address.startsWith('0x1234') || fromTokenObj.address.startsWith('0x0987') ||
+          toTokenObj.address.startsWith('0x1234') || toTokenObj.address.startsWith('0x0987')) {
+        throw new Error('Cannot swap with placeholder token addresses. Please use real token addresses.');
+      }
       
       const fromTokenAddress = fromTokenObj.address;
       const toTokenAddress = toTokenObj.address;
       
-      // 1. Approve router to spend tokens
+      // 1. Approve router to spend tokens (only for non-WMON tokens if WMON is involved)
       toast({
         title: "Approving Token",
         description: "Please confirm the approval transaction...",
@@ -120,21 +126,30 @@ export const useUniswapSwap = () => {
           if (outWei > 0n) {
             expectedOutput = ethers.formatUnits(outWei, toTokenObj.decimals);
             selectedPath = p;
+            console.log('Selected path:', p, 'Expected output:', expectedOutput);
             break;
           }
-        } catch {
-          // try next path
+        } catch (error) {
+          console.warn('Path failed:', p, error);
         }
       }
 
       if (!selectedPath) {
-        throw new Error('No route with sufficient liquidity between selected tokens');
+        throw new Error('No route with sufficient liquidity between selected tokens. You may need to add liquidity first.');
       }
 
       // 3. Calculate minimum output with slippage
       const slippageMultiplier = (100 - parseFloat(slippage)) / 100;
       const minOutput = (parseFloat(expectedOutput) * slippageMultiplier).toString();
       const minOutputWei = ethers.parseUnits(minOutput, toTokenObj.decimals);
+
+      console.log('Swap details:', {
+        fromAmount,
+        expectedOutput,
+        minOutput,
+        slippage,
+        path: selectedPath
+      });
 
       // 4. Execute swap
       toast({
@@ -187,7 +202,11 @@ export const useUniswapSwap = () => {
       } else if (error.message?.includes('EXPIRED')) {
         errorMessage = 'Transaction expired';
       } else if (error.message?.includes('Pair does not exist')) {
-        errorMessage = 'Trading pair does not exist';
+        errorMessage = 'Trading pair does not exist - you may need to add liquidity first';
+      } else if (error.message?.includes('placeholder')) {
+        errorMessage = error.message;
+      } else if (error.message?.includes('No route')) {
+        errorMessage = error.message;
       }
       
       toast({
@@ -332,36 +351,62 @@ export const useUniswapSwap = () => {
 
   // Quote helper using same routing logic (WMON as base)
   const quoteSwap = async (fromToken: string, toToken: string, amountIn: string) => {
-    const provider = getProvider();
-    const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, provider);
+    try {
+      const provider = getProvider();
+      const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, provider);
 
-    const fromTokenObj = TOKENS.find(t => t.symbol === fromToken);
-    const toTokenObj = TOKENS.find(t => t.symbol === toToken);
-    if (!fromTokenObj || !toTokenObj) throw new Error('Invalid token selection');
+      const fromTokenObj = TOKENS.find(t => t.symbol === fromToken);
+      const toTokenObj = TOKENS.find(t => t.symbol === toToken);
+      
+      if (!fromTokenObj || !toTokenObj) {
+        console.error('Token not found:', { fromToken, toToken });
+        return { amountOut: '0', path: [] };
+      }
 
-    const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
-    if (!wmonToken) throw new Error('WMON base token not found');
+      // Check for placeholder addresses
+      if (fromTokenObj.address.startsWith('0x1234') || fromTokenObj.address.startsWith('0x0987') ||
+          toTokenObj.address.startsWith('0x1234') || toTokenObj.address.startsWith('0x0987')) {
+        console.warn('Cannot quote swap with placeholder token addresses');
+        return { amountOut: '0', path: [] };
+      }
 
-    if (!amountIn || Number(amountIn) <= 0) return { amountOut: '0', path: [fromTokenObj.address, toTokenObj.address] };
+      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+      if (!wmonToken) {
+        console.error('WMON base token not found');
+        return { amountOut: '0', path: [] };
+      }
 
-    const amountInWei = ethers.parseUnits(amountIn, fromTokenObj.decimals);
+      if (!amountIn || Number(amountIn) <= 0) {
+        return { amountOut: '0', path: [fromTokenObj.address, toTokenObj.address] };
+      }
 
-    const candidatePaths: string[][] = [[fromTokenObj.address, toTokenObj.address]];
-    if (fromTokenObj.address !== wmonToken.address && toTokenObj.address !== wmonToken.address) {
-      candidatePaths.push([fromTokenObj.address, wmonToken.address, toTokenObj.address]);
-    }
+      const amountInWei = ethers.parseUnits(amountIn, fromTokenObj.decimals);
 
-    for (const p of candidatePaths) {
-      try {
-        const amounts = await routerContract.getAmountsOut(amountInWei, p);
-        const outWei = amounts[amounts.length - 1];
-        if (outWei > 0n) {
-          return { amountOut: ethers.formatUnits(outWei, toTokenObj.decimals), path: p };
+      const candidatePaths: string[][] = [[fromTokenObj.address, toTokenObj.address]];
+      if (fromTokenObj.address !== wmonToken.address && toTokenObj.address !== wmonToken.address) {
+        candidatePaths.push([fromTokenObj.address, wmonToken.address, toTokenObj.address]);
+      }
+
+      for (const p of candidatePaths) {
+        try {
+          const amounts = await routerContract.getAmountsOut(amountInWei, p);
+          const outWei = amounts[amounts.length - 1];
+          if (outWei > 0n) {
+            const amountOut = ethers.formatUnits(outWei, toTokenObj.decimals);
+            console.log('Quote successful:', { fromToken, toToken, amountIn, amountOut, path: p });
+            return { amountOut, path: p };
+          }
+        } catch (error) {
+          console.warn('Path failed:', p, error);
         }
-      } catch {}
-    }
+      }
 
-    return { amountOut: '0', path: candidatePaths[0] };
+      console.warn('No valid quote found for:', { fromToken, toToken, amountIn });
+      return { amountOut: '0', path: candidatePaths[0] };
+    } catch (error) {
+      console.error('Quote error:', error);
+      return { amountOut: '0', path: [] };
+    }
   };
 
   return {

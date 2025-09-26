@@ -17,6 +17,7 @@ export const TOKENS = [
   { name: "GMON", symbol: "GMON", decimals: 18, address: "0x517C7b2c5ab04Fe60f481bdDEC07D3f1fccDF489" },
   { name: "SHMON", symbol: "SHMON", decimals: 18, address: "0x13C944aF2de88DA97Bc5BBEB831cDfFaF9ee52e8" },
   { name: "USDM", symbol: "USDM", decimals: 6, address: "0x92907055EA5FFb809aE9809dF4c193fa345Ebac1" },
+  // Note: DAK and MOON tokens have placeholder addresses - replace with real addresses when available
   { name: "DAK", symbol: "DAK", decimals: 18, address: "0x1234567890123456789012345678901234567890" }, // placeholder
   { name: "MOON", symbol: "MOON", decimals: 18, address: "0x0987654321098765432109876543210987654321" } // placeholder
 ];
