@@ -10,6 +10,40 @@ import { useToast } from '@/hooks/use-toast';
 import { useUniswapSwap } from '@/hooks/useUniswapSwap';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
 import { TOKENS } from '@/lib/contracts';
+import { ethers } from 'ethers';
+
+// Custom hook for MON (native token) balance
+const useNativeBalance = () => {
+  const [balance, setBalance] = useState('0');
+  const [isLoading, setIsLoading] = useState(false);
+  const account = useActiveAccount();
+
+  const fetchBalance = async () => {
+    if (!account?.address) return;
+    
+    setIsLoading(true);
+    try {
+      if (!window.ethereum) {
+        throw new Error('MetaMask not found');
+      }
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const balanceWei = await provider.getBalance(account.address);
+      const formattedBalance = ethers.formatEther(balanceWei);
+      setBalance(formattedBalance);
+    } catch (error) {
+      console.error('Error fetching MON balance:', error);
+      setBalance('0');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBalance();
+  }, [account?.address]);
+
+  return { balance, isLoading, refetch: fetchBalance };
+};
 import { calculateTokenAmount, getTokenPrice } from '@/lib/tokenPrices';
 import { TokenSelector } from './TokenSelector';
 import { SwapSettings } from './SwapSettings';
@@ -30,6 +64,7 @@ export const SimpleSwapInterface: React.FC = () => {
   const { toast } = useToast();
   const { executeSwap, quoteSwap, addLiquidity, isLoading } = useUniswapSwap();
   const { balance: fromTokenBalance, isLoading: balanceLoading, refetch: refetchBalance } = useTokenBalance(fromToken.symbol);
+  const { balance: monBalance, isLoading: monLoading } = useNativeBalance();
 
   const handleFromAmountChange = (value: string) => {
     setFromAmount(value);
@@ -123,6 +158,18 @@ export const SimpleSwapInterface: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* MON Balance Display */}
+        {account && (
+          <div className="bg-muted/50 p-3 rounded-lg mb-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">MON Balance</span>
+              <span className="text-sm font-mono">
+                {monLoading ? '...' : parseFloat(monBalance).toFixed(6)} MON
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* From Token */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">

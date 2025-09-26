@@ -159,12 +159,16 @@ export const useUniswapSwap = () => {
 
       const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
 
+      // Set higher gas price for Monad Testnet (0.014 MON)
+      const gasPrice = ethers.parseUnits('0.014', 18);
+      
       const tx = await routerContract.swapExactTokensForTokens(
         amountInWei,
         minOutputWei,
         selectedPath,
         account.address,
-        deadline
+        deadline,
+        { gasPrice }
       );
       
       toast({
@@ -254,6 +258,9 @@ export const useUniswapSwap = () => {
       const amountBWei = ethers.parseUnits(amountB, tokenBObj.decimals);
       const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
 
+      // Set higher gas price for Monad Testnet
+      const gasPrice = ethers.parseUnits('0.014', 18);
+
       const tx = await routerContract.addLiquidity(
         tokenAObj.address,
         tokenBObj.address,
@@ -262,7 +269,8 @@ export const useUniswapSwap = () => {
         0, // amountAMin
         0, // amountBMin
         account.address,
-        deadline
+        deadline,
+        { gasPrice }
       );
 
       await tx.wait();
