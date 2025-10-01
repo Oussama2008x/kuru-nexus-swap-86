@@ -1,12 +1,9 @@
 // Contract addresses and ABIs for Monad Testnet
 export const CONTRACTS = {
   router: "0x2Ab90cE11601D98CDBf8a6601521328589b79416",
-};
-export const CONTRACTS = {
-  factory : "0xc23AE281FFCC9cce6F40C0cd4a2fC06BCca90521",
-};
-export const CONTRACTS = {
-  multicall : "0x6A6166957b2366056326f29C15b44573D60686E0",
+  factory: "0xc23AE281FFCC9cce6F40C0cd4a2fC06BCca90521",
+  // TODO: Add Factory ABI when needed
+  // TODO: Add Multicall ABI when needed (address: 0x6A6166957b2366056326f29C15b44573D60686E0)
 };
 // Token list for Monad Testnet - Updated with new tokens from user's list
 export const TOKENS = [
@@ -462,13 +459,12 @@ export const ERC20_ABI = [
 
 // Pair Contract ABI for Uniswap V2 style pairs
 export const PAIR_ABI = [
-   "abi": [
-    {
-      "inputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
     {
       "anonymous": false,
       "inputs": [
@@ -1174,8 +1170,9 @@ export const PAIR_ABI = [
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  ],
+];
 
+// Router Contract ABI for Uniswap V2
 export const ROUTER_ABI = [
   {
     "inputs": [
