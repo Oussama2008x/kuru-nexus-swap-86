@@ -360,11 +360,31 @@ export const useUniswapSwap = () => {
   // Quote helper using same routing logic (WMON as base)
   const quoteSwap = async (fromToken: string, toToken: string, amountIn: string) => {
     try {
+      console.log('quoteSwap called:', { fromToken, toToken, amountIn });
       const provider = getProvider();
       const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, provider);
 
-      const fromTokenObj = TOKENS.find(t => t.symbol === fromToken);
-      const toTokenObj = TOKENS.find(t => t.symbol === toToken);
+      let fromTokenObj = TOKENS.find(t => t.symbol === fromToken);
+      let toTokenObj = TOKENS.find(t => t.symbol === toToken);
+      
+      // Handle MON -> WMON conversion for routing
+      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+      if (!wmonToken) {
+        console.error('WMON base token not found');
+        return { amountOut: '0', path: [] };
+      }
+
+      // If fromToken is MON, use WMON for routing
+      if (fromToken === 'MON') {
+        console.log('Converting MON to WMON for routing');
+        fromTokenObj = wmonToken;
+      }
+      
+      // If toToken is MON, use WMON for routing
+      if (toToken === 'MON') {
+        console.log('Converting MON to WMON for routing');
+        toTokenObj = wmonToken;
+      }
       
       if (!fromTokenObj || !toTokenObj) {
         console.error('Token not found:', { fromToken, toToken });
@@ -378,41 +398,43 @@ export const useUniswapSwap = () => {
         return { amountOut: '0', path: [] };
       }
 
-      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
-      if (!wmonToken) {
-        console.error('WMON base token not found');
-        return { amountOut: '0', path: [] };
-      }
-
       if (!amountIn || Number(amountIn) <= 0) {
         return { amountOut: '0', path: [fromTokenObj.address, toTokenObj.address] };
       }
 
       const amountInWei = ethers.parseUnits(amountIn, fromTokenObj.decimals);
+      console.log('Amount in Wei:', amountInWei.toString());
 
+      // Try direct path first
       const candidatePaths: string[][] = [[fromTokenObj.address, toTokenObj.address]];
+      
+      // Add WMON intermediate path if needed
       if (fromTokenObj.address !== wmonToken.address && toTokenObj.address !== wmonToken.address) {
         candidatePaths.push([fromTokenObj.address, wmonToken.address, toTokenObj.address]);
       }
 
+      console.log('Trying paths:', candidatePaths);
+
       for (const p of candidatePaths) {
         try {
+          console.log('Attempting path:', p);
           const amounts = await routerContract.getAmountsOut(amountInWei, p);
+          console.log('Amounts returned:', amounts.map((a: bigint) => a.toString()));
           const outWei = amounts[amounts.length - 1];
           if (outWei > 0n) {
             const amountOut = ethers.formatUnits(outWei, toTokenObj.decimals);
             console.log('Quote successful:', { fromToken, toToken, amountIn, amountOut, path: p });
             return { amountOut, path: p };
           }
-        } catch (error) {
-          console.warn('Path failed:', p, error);
+        } catch (error: any) {
+          console.error('Path failed:', p, 'Error:', error?.message || error);
         }
       }
 
       console.warn('No valid quote found for:', { fromToken, toToken, amountIn });
       return { amountOut: '0', path: candidatePaths[0] };
-    } catch (error) {
-      console.error('Quote error:', error);
+    } catch (error: any) {
+      console.error('Quote error:', error?.message || error);
       return { amountOut: '0', path: [] };
     }
   };

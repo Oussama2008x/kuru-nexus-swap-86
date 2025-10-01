@@ -71,13 +71,22 @@ export const SimpleSwapInterface: React.FC = () => {
     
     if (value && !isNaN(Number(value)) && Number(value) > 0) {
       // Get on-chain quote using router paths (WMON as base)
+      console.log('Getting quote for:', { fromToken: fromToken.symbol, toToken: toToken.symbol, amount: value });
       quoteSwap(fromToken.symbol, toToken.symbol, value)
         .then(({ amountOut, path }) => {
-          setToAmount(amountOut);
-          setRoutePath(path || []);
+          console.log('Quote result:', { amountOut, path });
+          if (amountOut && amountOut !== '0') {
+            setToAmount(amountOut);
+            setRoutePath(path || []);
+          } else {
+            console.warn('Invalid quote result, amountOut is 0');
+            setToAmount('0');
+            setRoutePath([]);
+          }
         })
-        .catch(() => {
-          setToAmount('');
+        .catch((error) => {
+          console.error('Quote failed:', error);
+          setToAmount('0');
           setRoutePath([]);
         });
     } else {
@@ -158,8 +167,8 @@ export const SimpleSwapInterface: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* MON Balance Display */}
-        {account && (
+        {/* MON Balance Display - Only show when MON is selected */}
+        {account && fromToken.symbol === 'MON' && (
           <div className="bg-muted/50 p-3 rounded-lg mb-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">MON Balance</span>
