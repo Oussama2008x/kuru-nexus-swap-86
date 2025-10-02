@@ -28,6 +28,16 @@ export const useUniswapSwap = () => {
     return await provider.getSigner();
   };
 
+  const checkAllowance = async (tokenAddress: string, spenderAddress: string, amount: string, decimals: number) => {
+    const provider = getProvider();
+    const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+    
+    const amountInWei = ethers.parseUnits(amount, decimals);
+    const currentAllowance = await tokenContract.allowance(account?.address, spenderAddress);
+    
+    return currentAllowance >= amountInWei;
+  };
+
   const approveToken = async (tokenAddress: string, spenderAddress: string, amount: string, decimals: number) => {
     const signer = await getSigner();
     const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, signer);
@@ -44,7 +54,12 @@ export const useUniswapSwap = () => {
     
     // Approve max amount to avoid repeated approvals
     const maxAmount = ethers.MaxUint256;
-    const tx = await tokenContract.approve(spenderAddress, maxAmount);
+    
+    // Set gas price to 0.014 MON and gas limit
+    const gasPrice = ethers.parseUnits('0.014', 18);
+    const gasLimit = 300000;
+    
+    const tx = await tokenContract.approve(spenderAddress, maxAmount, { gasPrice, gasLimit });
     await tx.wait();
     
     return true;
@@ -159,8 +174,9 @@ export const useUniswapSwap = () => {
 
       const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
 
-      // Set higher gas price for Monad Testnet (0.014 MON)
+      // Set gas price to 0.014 MON and gas limit for Monad Testnet
       const gasPrice = ethers.parseUnits('0.014', 18);
+      const gasLimit = 300000;
       
       const tx = await routerContract.swapExactTokensForTokens(
         amountInWei,
@@ -168,7 +184,7 @@ export const useUniswapSwap = () => {
         selectedPath,
         account.address,
         deadline,
-        { gasPrice }
+        { gasPrice, gasLimit }
       );
       
       toast({
@@ -258,8 +274,9 @@ export const useUniswapSwap = () => {
       const amountBWei = ethers.parseUnits(amountB, tokenBObj.decimals);
       const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
 
-      // Set higher gas price for Monad Testnet
+      // Set gas price to 0.014 MON and gas limit for Monad Testnet
       const gasPrice = ethers.parseUnits('0.014', 18);
+      const gasLimit = 300000;
 
       const tx = await routerContract.addLiquidity(
         tokenAObj.address,
@@ -270,7 +287,7 @@ export const useUniswapSwap = () => {
         0, // amountBMin
         account.address,
         deadline,
-        { gasPrice }
+        { gasPrice, gasLimit }
       );
 
       await tx.wait();
@@ -445,6 +462,8 @@ export const useUniswapSwap = () => {
     addLiquidity,
     createAllLiquidityPairs,
     quoteSwap,
+    checkAllowance,
+    approveToken,
     isLoading,
   };
 };

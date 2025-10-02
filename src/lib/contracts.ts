@@ -2,8 +2,7 @@
 export const CONTRACTS = {
   router: "0x2Ab90cE11601D98CDBf8a6601521328589b79416",
   factory: "0xc23AE281FFCC9cce6F40C0cd4a2fC06BCca90521",
-  // TODO: Add Factory ABI when needed
-  // TODO: Add Multicall ABI when needed (address: 0x6A6166957b2366056326f29C15b44573D60686E0)
+  multicall: "0x6A6166957b2366056326f29C15b44573D60686E0",
 };
 // Token list for Monad Testnet - Updated with new tokens from user's list
 export const TOKENS = [
@@ -2154,3 +2153,9 @@ export const MONAD_TESTNET = {
   rpcUrl: "https://testnet-rpc.monad.xyz",
   blockExplorer: "https://testnet.monadexplorer.com",
 };
+
+// TODO: Add Factory ABI here when needed
+// Factory contract address: 0xc23AE281FFCC9cce6F40C0cd4a2fC06BCca90521
+
+// TODO: Add Multicall ABI here when needed
+// Multicall contract address: 0x6A6166957b2366056326f29C15b44573D60686E0

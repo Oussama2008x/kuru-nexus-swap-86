@@ -9,7 +9,7 @@ import { client, wallets, monadTestnet } from '@/lib/thirdweb';
 import { useToast } from '@/hooks/use-toast';
 import { useUniswapSwap } from '@/hooks/useUniswapSwap';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
-import { TOKENS } from '@/lib/contracts';
+import { TOKENS, CONTRACTS } from '@/lib/contracts';
 import { ethers } from 'ethers';
 
 // Custom hook for MON (native token) balance
@@ -60,16 +60,50 @@ export const SimpleSwapInterface: React.FC = () => {
   const [showToTokenSelector, setShowToTokenSelector] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [routePath, setRoutePath] = useState<string[]>([]);
+  const [needsApproval, setNeedsApproval] = useState(false);
+  const [isCheckingApproval, setIsCheckingApproval] = useState(false);
   const account = useActiveAccount();
   const { toast } = useToast();
-  const { executeSwap, quoteSwap, addLiquidity, isLoading } = useUniswapSwap();
+  const { executeSwap, quoteSwap, addLiquidity, checkAllowance, approveToken, isLoading } = useUniswapSwap();
   const { balance: fromTokenBalance, isLoading: balanceLoading, refetch: refetchBalance } = useTokenBalance(fromToken.symbol);
-  const { balance: monBalance, isLoading: monLoading } = useNativeBalance();
+  const { balance: monBalance, isLoading: monLoading, refetch: refetchMonBalance } = useNativeBalance();
 
-  const handleFromAmountChange = (value: string) => {
+  const checkApprovalStatus = async (token: typeof TOKENS[0], amount: string) => {
+    if (!account?.address || !amount || Number(amount) <= 0) {
+      setNeedsApproval(false);
+      return;
+    }
+
+    // MON doesn't need approval (native token)
+    if (token.symbol === 'MON') {
+      setNeedsApproval(false);
+      return;
+    }
+
+    setIsCheckingApproval(true);
+    try {
+      const hasAllowance = await checkAllowance(
+        token.address,
+        CONTRACTS.router,
+        amount,
+        token.decimals
+      );
+      setNeedsApproval(!hasAllowance);
+    } catch (error) {
+      console.error('Error checking allowance:', error);
+      setNeedsApproval(false);
+    } finally {
+      setIsCheckingApproval(false);
+    }
+  };
+
+  const handleFromAmountChange = async (value: string) => {
     setFromAmount(value);
     
     if (value && !isNaN(Number(value)) && Number(value) > 0) {
+      // Check approval status
+      await checkApprovalStatus(fromToken, value);
+      
       // Get on-chain quote using router paths (WMON as base)
       console.log('Getting quote for:', { fromToken: fromToken.symbol, toToken: toToken.symbol, amount: value });
       quoteSwap(fromToken.symbol, toToken.symbol, value)
@@ -92,6 +126,7 @@ export const SimpleSwapInterface: React.FC = () => {
     } else {
       setToAmount('');
       setRoutePath([]);
+      setNeedsApproval(false);
     }
   };
 
@@ -103,6 +138,41 @@ export const SimpleSwapInterface: React.FC = () => {
     setToToken(tempToken);
     setFromAmount(toAmount);
     setToAmount(tempAmount);
+  };
+
+  const handleApprove = async () => {
+    if (!account || !fromAmount) {
+      return;
+    }
+
+    try {
+      toast({
+        title: "Approving Token",
+        description: `Approving ${fromToken.symbol} for trading...`,
+      });
+
+      await approveToken(
+        fromToken.address,
+        CONTRACTS.router,
+        fromAmount,
+        fromToken.decimals
+      );
+
+      toast({
+        title: "Approval Successful",
+        description: `${fromToken.symbol} approved successfully!`,
+      });
+
+      // Recheck approval status
+      await checkApprovalStatus(fromToken, fromAmount);
+    } catch (error: any) {
+      console.error('Approval error:', error);
+      toast({
+        title: "Approval Failed",
+        description: error.message || "Failed to approve token",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSwap = async () => {
@@ -125,7 +195,8 @@ export const SimpleSwapInterface: React.FC = () => {
     }
 
     // Check if user has sufficient balance
-    if (parseFloat(fromAmount) > parseFloat(fromTokenBalance)) {
+    const userBalance = fromToken.symbol === 'MON' ? monBalance : fromTokenBalance;
+    if (parseFloat(fromAmount) > parseFloat(userBalance)) {
       toast({
         title: "Insufficient Balance",
         description: `You don't have enough ${fromToken.symbol}`,
@@ -141,9 +212,12 @@ export const SimpleSwapInterface: React.FC = () => {
       slippage,
     });
 
-    // Refresh balance after successful swap
+    // Refresh balances after successful swap
     if (result?.success) {
       refetchBalance();
+      if (fromToken.symbol === 'MON' || toToken.symbol === 'MON') {
+        refetchMonBalance();
+      }
     }
   };
 
@@ -276,17 +350,30 @@ export const SimpleSwapInterface: React.FC = () => {
           />
         )}
 
-        {/* Action Button */}
+        {/* Action Buttons */}
         {account ? (
-          <TradingButton
-            variant="trading"
-            size="lg"
-            onClick={handleSwap}
-            disabled={!fromAmount || !toAmount || isLoading}
-            className="w-full"
-          >
-            {isLoading ? 'Processing...' : `Swap ${fromToken.symbol} for ${toToken.symbol}`}
-          </TradingButton>
+          <div className="space-y-2">
+            {needsApproval && (
+              <TradingButton
+                variant="outline"
+                size="lg"
+                onClick={handleApprove}
+                disabled={!fromAmount || isLoading || isCheckingApproval}
+                className="w-full"
+              >
+                {isCheckingApproval ? 'Checking...' : `Approve ${fromToken.symbol}`}
+              </TradingButton>
+            )}
+            <TradingButton
+              variant="trading"
+              size="lg"
+              onClick={handleSwap}
+              disabled={!fromAmount || !toAmount || isLoading || needsApproval}
+              className="w-full"
+            >
+              {isLoading ? 'Processing...' : needsApproval ? 'Approve First' : `Swap ${fromToken.symbol} for ${toToken.symbol}`}
+            </TradingButton>
+          </div>
         ) : (
           <ConnectButton
             client={client}
@@ -307,9 +394,10 @@ export const SimpleSwapInterface: React.FC = () => {
       <TokenSelector
         isOpen={showFromTokenSelector}
         onClose={() => setShowFromTokenSelector(false)}
-        onSelectToken={(token) => {
+        onSelectToken={async (token) => {
           setFromToken(token);
           if (fromAmount) {
+            await checkApprovalStatus(token, fromAmount);
             quoteSwap(token.symbol, toToken.symbol, fromAmount)
               .then(({ amountOut, path }) => {
                 setToAmount(amountOut);
@@ -323,6 +411,7 @@ export const SimpleSwapInterface: React.FC = () => {
             setFromAmount('');
             setToAmount('');
             setRoutePath([]);
+            setNeedsApproval(false);
           }
         }}
         selectedToken={fromToken}
