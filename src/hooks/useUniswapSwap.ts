@@ -87,8 +87,18 @@ export const useUniswapSwap = () => {
       const routerContract = new ethers.Contract(CONTRACTS.router, ROUTER_ABI, signer);
       
       // Find token objects from TOKENS array
-      const fromTokenObj = TOKENS.find(token => token.symbol === fromToken);
+      let fromTokenObj = TOKENS.find(token => token.symbol === fromToken);
       const toTokenObj = TOKENS.find(token => token.symbol === toToken);
+      
+      // Handle MON token (native token)
+      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
+      const isFromMON = fromToken === 'MON';
+      const isToMON = toToken === 'MON';
+      
+      // If MON is selected, use WMON for the swap
+      if (isFromMON && wmonToken) {
+        fromTokenObj = wmonToken;
+      }
       
       if (!fromTokenObj || !toTokenObj) {
         throw new Error('Invalid token selection');
@@ -103,19 +113,9 @@ export const useUniswapSwap = () => {
       const fromTokenAddress = fromTokenObj.address;
       const toTokenAddress = toTokenObj.address;
       
-      // 1. Approve router to spend tokens (only for non-WMON tokens if WMON is involved)
-      toast({
-        title: "Approving Token",
-        description: "Please confirm the approval transaction...",
-      });
-      
-      await approveToken(fromTokenAddress, CONTRACTS.router, fromAmount, fromTokenObj.decimals);
-      
-      // 2. Determine swap path with WMON as primary base token
+      // Determine swap path with WMON as primary base token
       const amountInWei = ethers.parseUnits(fromAmount, fromTokenObj.decimals);
 
-      // Get WMON as the primary base token
-      const wmonToken = TOKENS.find(t => t.symbol === 'WMON');
       if (!wmonToken) {
         throw new Error('WMON base token not found in token list');
       }
@@ -153,7 +153,7 @@ export const useUniswapSwap = () => {
         throw new Error('No route with sufficient liquidity between selected tokens. You may need to add liquidity first.');
       }
 
-      // 3. Calculate minimum output with slippage
+      // Calculate minimum output with slippage
       const slippageMultiplier = (100 - parseFloat(slippage)) / 100;
       const minOutput = (parseFloat(expectedOutput) * slippageMultiplier).toString();
       const minOutputWei = ethers.parseUnits(minOutput, toTokenObj.decimals);
@@ -166,7 +166,7 @@ export const useUniswapSwap = () => {
         path: selectedPath
       });
 
-      // 4. Execute swap
+      // Execute swap
       toast({
         title: "Executing Swap",
         description: "Please confirm the swap transaction...",
@@ -178,14 +178,39 @@ export const useUniswapSwap = () => {
       const gasPrice = ethers.parseUnits('0.014', 18);
       const gasLimit = 300000;
       
-      const tx = await routerContract.swapExactTokensForTokens(
-        amountInWei,
-        minOutputWei,
-        selectedPath,
-        account.address,
-        deadline,
-        { gasPrice, gasLimit }
-      );
+      let tx;
+      
+      // Use different swap method if MON is involved (swap with ETH)
+      if (isFromMON) {
+        // Swapping MON to token
+        tx = await routerContract.swapExactETHForTokens(
+          minOutputWei,
+          selectedPath,
+          account.address,
+          deadline,
+          { value: amountInWei, gasPrice, gasLimit }
+        );
+      } else if (isToMON) {
+        // Swapping token to MON
+        tx = await routerContract.swapExactTokensForETH(
+          amountInWei,
+          minOutputWei,
+          selectedPath,
+          account.address,
+          deadline,
+          { gasPrice, gasLimit }
+        );
+      } else {
+        // Normal token to token swap
+        tx = await routerContract.swapExactTokensForTokens(
+          amountInWei,
+          minOutputWei,
+          selectedPath,
+          account.address,
+          deadline,
+          { gasPrice, gasLimit }
+        );
+      }
       
       toast({
         title: "Transaction Submitted",
