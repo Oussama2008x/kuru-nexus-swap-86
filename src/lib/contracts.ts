@@ -22,6 +22,38 @@ export const TOKENS = [
   { name: "DAK", symbol: "DAK", decimals: 18, address: "0x1234567890123456789012345678901234567890" }, // placeholder
   { name: "MOON", symbol: "MOON", decimals: 18, address: "0x0987654321098765432109876543210987654321" } // placeholder
 ];
+export const Factory_ABI = [  
+"abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_feeToSetter",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token0",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token1",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
 
 export const ERC20_ABI = [
   {
