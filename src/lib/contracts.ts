@@ -165,7 +165,7 @@ export const multicall_ABI =
     }
   ],
   
-export const Factory_ABI = [  
+export const Factory_ABI = 
 "abi": [
     {
       "inputs": [
