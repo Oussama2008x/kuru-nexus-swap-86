@@ -231,30 +231,14 @@ export const SimpleSwapInterface: React.FC = () => {
       {/* Header with Settings */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-foreground">Swap</h2>
-        <div className="flex items-center gap-2">
-          <TradingButton 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setShowSettings(true)}
-            className="hover:bg-muted/50"
-          >
-            <Settings className="w-5 h-5" />
-          </TradingButton>
-          {!account && (
-            <ConnectButton
-              client={client}
-              connectButton={{ label: "Connect wallet" }}
-              connectModal={{
-                privacyPolicyUrl: "https://kerdium.vercel.app/about",
-                size: "compact",
-                termsOfServiceUrl: "https://kerdium.vercel.app/faq",
-                title: "KERDIUM FINANCE",
-              }}
-              wallets={wallets}
-              chain={monadTestnet}
-            />
-          )}
-        </div>
+        <TradingButton 
+          variant="ghost" 
+          size="icon"
+          onClick={() => setShowSettings(true)}
+          className="hover:bg-muted/50"
+        >
+          <Settings className="w-5 h-5" />
+        </TradingButton>
       </div>
 
       {/* From Panel */}
@@ -398,7 +382,7 @@ export const SimpleSwapInterface: React.FC = () => {
             client={client}
             connectButton={{ 
               label: "Connect wallet",
-              className: "w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base"
+              className: "w-full h-16 rounded-2xl bg-[#00ff88] hover:bg-[#00ff88]/90 text-black font-bold text-lg shadow-lg shadow-[#00ff88]/20"
             }}
             connectModal={{
               privacyPolicyUrl: "https://kerdium.vercel.app/about",
