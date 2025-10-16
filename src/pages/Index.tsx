@@ -11,10 +11,8 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Kerdium Platform of the Future DEFI
-            </span>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
+            Kerdium Platform of the Future DEFI
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             AI-powered DeFi trading platform with smart execution algorithms for optimal performance.
