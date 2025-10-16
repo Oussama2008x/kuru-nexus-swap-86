@@ -382,7 +382,7 @@ export const SimpleSwapInterface: React.FC = () => {
             client={client}
             connectButton={{ 
               label: "Connect wallet",
-              className: "w-full h-16 rounded-2xl bg-[#00ff88] hover:bg-[#00ff88]/90 text-black font-bold text-lg shadow-lg shadow-[#00ff88]/20"
+              className: "w-full h-14 rounded-2xl bg-white hover:bg-white/90 text-black font-bold text-base shadow-lg transition-all duration-200 hover:shadow-xl"
             }}
             connectModal={{
               privacyPolicyUrl: "https://kerdium.vercel.app/about",
