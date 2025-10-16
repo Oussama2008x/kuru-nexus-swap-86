@@ -227,157 +227,179 @@ export const SimpleSwapInterface: React.FC = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center justify-between">
-          Swap
+    <div className="w-full max-w-md mx-auto">
+      {/* Header with Settings */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-foreground">Swap</h2>
+        <div className="flex items-center gap-2">
           <TradingButton 
             variant="ghost" 
             size="icon"
             onClick={() => setShowSettings(true)}
+            className="hover:bg-muted/50"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-5 h-5" />
           </TradingButton>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* MON Balance Display - Only show when MON is selected */}
-        {account && fromToken.symbol === 'MON' && (
-          <div className="bg-muted/50 p-3 rounded-lg mb-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">MON Balance</span>
-              <span className="text-sm font-mono">
-                {monLoading ? '...' : parseFloat(monBalance).toFixed(6)} MON
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* From Token */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label>From</Label>
-            {account && (
-              <div className="text-xs text-muted-foreground">
-                Balance: {balanceLoading ? '...' : parseFloat(fromTokenBalance).toFixed(6)} {fromToken.symbol}
-              </div>
-            )}
-          </div>
-          <div className="flex items-center space-x-2">
-            <TradingButton
-              variant="outline"
-              onClick={() => setShowFromTokenSelector(true)}
-              className="flex items-center space-x-2 px-3 h-10"
-            >
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold">
-                {fromToken.symbol.slice(0, 2)}
-              </div>
-              <span>{fromToken.symbol}</span>
-              <ChevronDown className="w-4 h-4" />
-            </TradingButton>
-            <Input
-              type="number"
-              placeholder="0.0"
-              value={fromAmount}
-              onChange={(e) => handleFromAmountChange(e.target.value)}
-              className="flex-1"
-            />
-          </div>
-          
-          {/* Percentage Buttons */}
-          {account && (
-            <PercentageButtons
-              balance={fromTokenBalance}
-              onAmountSelect={handlePercentageAmount}
-              disabled={balanceLoading || isLoading}
+          {!account && (
+            <ConnectButton
+              client={client}
+              connectButton={{ label: "Connect wallet" }}
+              connectModal={{
+                privacyPolicyUrl: "https://kerdium.vercel.app/about",
+                size: "compact",
+                termsOfServiceUrl: "https://kerdium.vercel.app/faq",
+                title: "KERDIUM FINANCE",
+              }}
+              wallets={wallets}
+              chain={monadTestnet}
             />
           )}
-          
-          <div className="text-xs text-muted-foreground text-right">
-            ≈ ${fromAmount ? (Number(fromAmount) * getTokenPrice(fromToken.symbol)).toFixed(2) : '0.00'}
-          </div>
         </div>
+      </div>
 
-        {/* Swap Button */}
-        <div className="flex justify-center">
+      {/* From Panel */}
+      <div className="bg-card border border-border rounded-2xl p-4 shadow-card mb-2">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm text-muted-foreground">From</span>
+          {account && (
+            <span className="text-xs text-muted-foreground">
+              Balance: {fromToken.symbol === 'MON' 
+                ? (monLoading ? '...' : parseFloat(monBalance).toFixed(6))
+                : (balanceLoading ? '...' : parseFloat(fromTokenBalance).toFixed(6))
+              }
+            </span>
+          )}
+        </div>
+        
+        <div className="flex items-center justify-between gap-3">
           <TradingButton
             variant="ghost"
-            size="icon"
-            onClick={handleSwapTokens}
-            className="rounded-full border border-border"
+            onClick={() => setShowFromTokenSelector(true)}
+            className="flex items-center gap-2 px-3 py-2 h-auto hover:bg-muted/50 rounded-xl"
           >
-            <ArrowDownUp className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center">
+              <span className="text-white text-xs font-bold">
+                {fromToken.symbol === 'MON' ? '🟣' : fromToken.symbol.slice(0, 1)}
+              </span>
+            </div>
+            <span className="text-lg font-semibold">{fromToken.symbol}</span>
+            <ChevronDown className="w-4 h-4" />
           </TradingButton>
-        </div>
-
-        {/* To Token */}
-        <div className="space-y-2">
-          <Label>To</Label>
-          <div className="flex items-center space-x-2">
-            <TradingButton
-              variant="outline"
-              onClick={() => setShowToTokenSelector(true)}
-              className="flex items-center space-x-2 px-3 h-10"
-            >
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold">
-                {toToken.symbol.slice(0, 2)}
-              </div>
-              <span>{toToken.symbol}</span>
-              <ChevronDown className="w-4 h-4" />
-            </TradingButton>
+          
+          <div className="flex-1 text-right">
             <Input
               type="number"
-              placeholder="0.0"
-              value={toAmount}
-              readOnly
-              className="flex-1 bg-muted"
+              placeholder="0.00"
+              value={fromAmount}
+              onChange={(e) => handleFromAmountChange(e.target.value)}
+              className="text-right text-2xl font-semibold bg-transparent border-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
             />
-          </div>
-          <div className="text-xs text-muted-foreground text-right">
-            ≈ ${toAmount ? (Number(toAmount) * getTokenPrice(toToken.symbol)).toFixed(2) : '0.00'}
+            <div className="text-xs text-muted-foreground mt-1">
+              ${fromAmount ? (Number(fromAmount) * getTokenPrice(fromToken.symbol)).toFixed(2) : '0.00'}
+            </div>
           </div>
         </div>
 
-        {/* Transaction Summary */}
-        {fromAmount && toAmount && (
-          <TransactionSummary
-            fromToken={fromToken}
-            toToken={toToken}
-            fromAmount={fromAmount}
-            toAmount={toAmount}
-            slippage={slippage}
-            routePath={routePath}
-          />
-        )}
-
-        {/* Action Buttons */}
-        {account ? (
-          <div className="space-y-2">
-            {needsApproval && (
-              <TradingButton
-                variant="outline"
-                size="lg"
-                onClick={handleApprove}
-                disabled={!fromAmount || isLoading || isCheckingApproval}
-                className="w-full"
-              >
-                {isCheckingApproval ? 'Checking...' : `Approve ${fromToken.symbol}`}
-              </TradingButton>
-            )}
-            <TradingButton
-              variant="trading"
-              size="lg"
-              onClick={handleSwap}
-              disabled={!fromAmount || !toAmount || isLoading || needsApproval}
-              className="w-full"
-            >
-              {isLoading ? 'Processing...' : needsApproval ? 'Approve First' : `Swap ${fromToken.symbol} for ${toToken.symbol}`}
-            </TradingButton>
+        {/* Percentage Buttons */}
+        {account && (
+          <div className="mt-3">
+            <PercentageButtons
+              balance={fromToken.symbol === 'MON' ? monBalance : fromTokenBalance}
+              onAmountSelect={handlePercentageAmount}
+              disabled={balanceLoading || isLoading || monLoading}
+            />
           </div>
-        ) : (
+        )}
+      </div>
+
+      {/* Swap Icon */}
+      <div className="flex justify-center -my-2 relative z-10">
+        <TradingButton
+          variant="ghost"
+          size="icon"
+          onClick={handleSwapTokens}
+          className="rounded-full bg-card border-2 border-border hover:bg-muted/50 h-10 w-10"
+        >
+          <ArrowDownUp className="w-4 h-4 text-primary" />
+        </TradingButton>
+      </div>
+
+      {/* To Panel */}
+      <div className="bg-card border border-border rounded-2xl p-4 shadow-card mb-4">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm text-muted-foreground">To</span>
+        </div>
+        
+        <div className="flex items-center justify-between gap-3">
+          <TradingButton
+            variant="ghost"
+            onClick={() => setShowToTokenSelector(true)}
+            className="flex items-center gap-2 px-3 py-2 h-auto hover:bg-muted/50 rounded-xl"
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">
+                {toToken.symbol === 'USDC' ? '🔵' : toToken.symbol.slice(0, 1)}
+              </span>
+            </div>
+            <span className="text-lg font-semibold">{toToken.symbol}</span>
+            <ChevronDown className="w-4 h-4" />
+          </TradingButton>
+          
+          <div className="flex-1 text-right">
+            <div className="text-2xl font-semibold text-foreground">
+              {toAmount || '0.00'}
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              ${toAmount ? (Number(toAmount) * getTokenPrice(toToken.symbol)).toFixed(2) : '0.00'}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Transaction Summary */}
+      {fromAmount && toAmount && (
+        <TransactionSummary
+          fromToken={fromToken}
+          toToken={toToken}
+          fromAmount={fromAmount}
+          toAmount={toAmount}
+          slippage={slippage}
+          routePath={routePath}
+        />
+      )}
+
+      {/* Action Buttons */}
+      {account ? (
+        <div className="space-y-3 mt-6">
+          {needsApproval && (
+            <TradingButton
+              variant="outline"
+              size="lg"
+              onClick={handleApprove}
+              disabled={!fromAmount || isLoading || isCheckingApproval}
+              className="w-full text-base font-semibold h-14 rounded-2xl border-primary/50 hover:border-primary"
+            >
+              {isCheckingApproval ? 'Checking...' : `Approve ${fromToken.symbol}`}
+            </TradingButton>
+          )}
+          <TradingButton
+            variant="default"
+            size="lg"
+            onClick={handleSwap}
+            disabled={!fromAmount || !toAmount || isLoading || needsApproval}
+            className="w-full text-base font-semibold h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
+            {isLoading ? 'Processing...' : needsApproval ? 'Approve First' : 'Swap'}
+          </TradingButton>
+        </div>
+      ) : (
+        <div className="mt-6">
           <ConnectButton
             client={client}
-            connectButton={{ label: "Connect Wallet to Swap" }}
+            connectButton={{ 
+              label: "Connect wallet",
+              className: "w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base"
+            }}
             connectModal={{
               privacyPolicyUrl: "https://kerdium.vercel.app/about",
               size: "compact",
@@ -387,9 +409,9 @@ export const SimpleSwapInterface: React.FC = () => {
             wallets={wallets}
             chain={monadTestnet}
           />
-        )}
-      </CardContent>
-      
+        </div>
+      )}
+
       {/* Token Selectors */}
       <TokenSelector
         isOpen={showFromTokenSelector}
@@ -444,6 +466,6 @@ export const SimpleSwapInterface: React.FC = () => {
         slippage={slippage}
         onSlippageChange={setSlippage}
       />
-    </Card>
+    </div>
   );
 };
