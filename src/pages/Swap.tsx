@@ -1,14 +1,13 @@
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { SimpleSwapInterface } from '@/components/swap/SimpleSwapInterface';
 import { LiquidityAdminTools } from '@/components/swap/LiquidityAdminTools';
 
 const Swap: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="max-w-4xl mx-auto">
           {/* Page Header */}
           <div className="text-center mb-8">
@@ -30,7 +29,15 @@ const Swap: React.FC = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      
+      {/* Copyright Only Footer */}
+      <footer className="border-t bg-background py-4">
+        <div className="container mx-auto px-4">
+          <div className="text-xs text-muted-foreground text-center">
+            © 2024 Kerdium. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

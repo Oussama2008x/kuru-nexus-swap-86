@@ -371,7 +371,7 @@ export const SimpleSwapInterface: React.FC = () => {
             size="lg"
             onClick={handleSwap}
             disabled={!fromAmount || !toAmount || isLoading || needsApproval}
-            className="w-full text-base font-semibold h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground"
+            className="w-full text-base font-bold h-14 rounded-2xl bg-white hover:bg-white/90 text-black shadow-lg transition-all duration-200 hover:shadow-xl"
           >
             {isLoading ? 'Processing...' : needsApproval ? 'Approve First' : 'Swap'}
           </TradingButton>
