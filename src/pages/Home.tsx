@@ -129,11 +129,11 @@ const Home = () => {
                 className="w-64 h-64 object-contain"
               />
             </div>
-            <h2 className="text-3xl font-bold mb-4">أمان وقوة منصة Kerdium المالية</h2>
+            <h2 className="text-3xl font-bold mb-4">Kerdium Platform Security and Financial Strength</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              تعتمد منصة Kerdium على أعلى معايير الأمان المالي والتشفير المتقدم لحماية أصولك الرقمية. 
-              نوفر بنية تحتية قوية ومدققة من قبل خبراء الأمن السيبراني لضمان سلامة معاملاتك المالية على مدار الساعة.
-              مع نظام حماية متعدد الطبقات وعقود ذكية مراجعة بدقة، نضمن لك تجربة تداول آمنة وموثوقة.
+              Kerdium platform relies on the highest standards of financial security and advanced encryption to protect your digital assets. 
+              We provide a robust infrastructure audited by cybersecurity experts to ensure the safety of your financial transactions around the clock.
+              With a multi-layered protection system and carefully reviewed smart contracts, we guarantee you a safe and reliable trading experience.
             </p>
           </div>
         </div>
