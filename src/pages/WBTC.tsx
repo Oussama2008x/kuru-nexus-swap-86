@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { 
-  Bitcoin, 
   Shield, 
   Zap, 
   Coins, 
@@ -19,6 +18,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import bitcoinLogo from '@/assets/tokens/bitcoin.png';
 
 const WBTC = () => {
   return (
@@ -42,7 +42,7 @@ const WBTC = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-full blur-xl"></div>
               <div className="relative bg-gradient-to-r from-orange-500 to-yellow-500 p-4 rounded-2xl">
-                <Bitcoin className="h-12 w-12 text-white" />
+                <img src={bitcoinLogo} alt="WBTC" className="h-12 w-12" />
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ const WBTC = () => {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-orange-500/10 rounded-lg">
-                    <Bitcoin className="h-5 w-5 text-orange-500" />
+                    <img src={bitcoinLogo} alt="Bitcoin" className="h-5 w-5" />
                   </div>
                   <CardTitle>Same Bitcoin Value</CardTitle>
                 </div>
