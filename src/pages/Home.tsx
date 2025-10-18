@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Zap, TrendingUp, Shield, Sparkles, ArrowRight, Users, DollarSign } from 'lucide-react';
+import platformSecurity from '@/assets/platform-security.png';
 
 const Home = () => {
   return (
@@ -115,6 +116,25 @@ const Home = () => {
               </div>
               <p className="text-sm text-muted-foreground">Uptime</p>
             </div>
+          </div>
+        </div>
+
+        {/* Platform Security Section */}
+        <div className="mb-16">
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <img 
+                src={platformSecurity} 
+                alt="أمان المنصة المالية" 
+                className="w-64 h-64 object-contain"
+              />
+            </div>
+            <h2 className="text-3xl font-bold mb-4">أمان وقوة منصة Kerdium المالية</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              تعتمد منصة Kerdium على أعلى معايير الأمان المالي والتشفير المتقدم لحماية أصولك الرقمية. 
+              نوفر بنية تحتية قوية ومدققة من قبل خبراء الأمن السيبراني لضمان سلامة معاملاتك المالية على مدار الساعة.
+              مع نظام حماية متعدد الطبقات وعقود ذكية مراجعة بدقة، نضمن لك تجربة تداول آمنة وموثوقة.
+            </p>
           </div>
         </div>
 
