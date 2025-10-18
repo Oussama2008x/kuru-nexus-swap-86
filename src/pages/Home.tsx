@@ -8,6 +8,7 @@ import { Zap, TrendingUp, Shield, Sparkles, ArrowRight, Users, DollarSign } from
 import platformSecurity from '@/assets/platform-security.png';
 import bitcoinLogo from '@/assets/tokens/bitcoin.png';
 import ethLogo from '@/assets/tokens/eth.png';
+import usdcLogo from '@/assets/tokens/usdc.png';
 
 const Home = () => {
   return (
@@ -152,7 +153,7 @@ const Home = () => {
             <Card className="p-6 hover:shadow-lg transition-all hover:scale-105 cursor-pointer" onClick={() => window.location.href = '/usdc'}>
               <CardContent className="p-0 text-center">
                 <div className="bg-blue-500/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <img src="/src/assets/tokens/usdc.png" alt="USDC" className="w-10 h-10" />
+                  <img src={usdcLogo} alt="USDC" className="w-10 h-10" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">USDC</h3>
                 <p className="text-muted-foreground mb-4">Stable digital currency pegged to USD</p>

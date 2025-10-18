@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ExternalLink, Shield, Zap, Globe, CheckCircle, Coins, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import usdcLogo from '@/assets/tokens/usdc.png';
 
 const USDC = () => {
   return (
@@ -30,7 +31,7 @@ const USDC = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"></div>
               <div className="relative bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-2xl">
-                <img src="/src/assets/tokens/usdc.png" alt="USDC" className="h-12 w-12" />
+                <img src={usdcLogo} alt="USDC" className="h-12 w-12" />
               </div>
             </div>
           </div>
