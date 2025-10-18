@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Zap, TrendingUp, Shield, Sparkles, ArrowRight, Users, DollarSign } from 'lucide-react';
 import platformSecurity from '@/assets/platform-security.png';
 import bitcoinLogo from '@/assets/tokens/bitcoin.png';
+import ethLogo from '@/assets/tokens/eth.png';
 
 const Home = () => {
   return (
@@ -162,7 +163,7 @@ const Home = () => {
             <Card className="p-6 hover:shadow-lg transition-all hover:scale-105 cursor-pointer" onClick={() => window.location.href = '/weth'}>
               <CardContent className="p-0 text-center">
                 <div className="bg-purple-500/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <img src="/src/assets/tokens/weth.png" alt="WETH" className="w-10 h-10" />
+                  <img src={ethLogo} alt="WETH" className="w-10 h-10" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">WETH</h3>
                 <p className="text-muted-foreground mb-4">Wrapped Ethereum for DeFi trading</p>

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ExternalLink, Shield, Zap, Coins, TrendingUp, ArrowUpDown, Lock, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ethLogo from '@/assets/tokens/eth.png';
 
 const WETH = () => {
   return (
@@ -30,14 +31,14 @@ const WETH = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full blur-xl"></div>
               <div className="relative bg-gradient-to-r from-purple-500 to-blue-500 p-4 rounded-2xl">
-                <img src="/src/assets/tokens/weth.png" alt="WETH" className="h-12 w-12" />
+                <img src={ethLogo} alt="WETH" className="h-12 w-12" />
               </div>
             </div>
             <ArrowUpDown className="h-8 w-8 text-muted-foreground" />
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl"></div>
               <div className="relative bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-2xl">
-                <img src="/src/assets/tokens/eth.png" alt="ETH" className="h-12 w-12" />
+                <img src={ethLogo} alt="ETH" className="h-12 w-12" />
               </div>
             </div>
           </div>
