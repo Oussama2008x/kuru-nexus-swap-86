@@ -5,12 +5,11 @@ import { ConnectButton } from "thirdweb/react";
 import { MobileMenu } from './MobileMenu';
 import { ThemeToggle } from './ThemeToggle';
 import { client, wallets } from '@/lib/thirdweb';
-import headerBg from '@/assets/header-bg.png';
 
 export const Header: React.FC = () => {
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-cover bg-center" style={{ backgroundImage: `url(${headerBg})` }}>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-transparent">
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center gap-3">
