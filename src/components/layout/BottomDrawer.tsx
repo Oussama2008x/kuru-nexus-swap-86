@@ -27,7 +27,7 @@ const BottomDrawer = () => {
           القائمة
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[60vh] bg-[#111] text-white border-t border-border/20 rounded-t-3xl">
+      <DrawerContent className="h-[50vh] bg-[#111] text-white border-t border-border/20 rounded-t-3xl">
         {/* المقبض الأخضر */}
         <div className="mx-auto mt-4 h-1.5 w-20 rounded-full bg-[#22c55e]" />
         
