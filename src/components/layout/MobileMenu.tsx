@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ConnectButton } from "thirdweb/react";
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { LanguageSelector } from './LanguageSelector';
 import { ThemeToggle } from './ThemeToggle';
 import { client, wallets } from '@/lib/thirdweb';
@@ -28,14 +28,14 @@ const MobileMenu = () => {
   ];
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
+    <Drawer open={isOpen} onOpenChange={setIsOpen} direction="left">
+      <DrawerTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="w-4 h-4" />
+          <Menu className="w-5 h-5" />
         </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[400px] overflow-y-auto">
-        <div className="flex flex-col space-y-6 mt-8">
+      </DrawerTrigger>
+      <DrawerContent className="h-full w-[300px] sm:w-[400px] bg-[#111] text-white border-r border-border/20 rounded-r-xl">
+        <div className="flex flex-col space-y-6 mt-8 px-4 overflow-y-auto h-full pb-8">
           {/* Navigation */}
           <div>
             <div className="text-lg font-semibold mb-4">Navigation</div>
@@ -44,7 +44,7 @@ const MobileMenu = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-left py-3 px-4 rounded-lg hover:bg-muted transition-colors text-foreground hover:text-primary"
+                  className="text-left py-3 px-4 rounded-lg transition-colors text-white/80 hover:text-white hover:bg-[#22c55e]/20"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}
@@ -53,12 +53,12 @@ const MobileMenu = () => {
               
               {/* Crypto Section */}
               <div className="mt-4">
-                <div className="text-sm font-medium text-muted-foreground mb-2 px-4">Crypto</div>
+                <div className="text-sm font-medium text-white/60 mb-2 px-4">Crypto</div>
                 {cryptoItems.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
-                    className="text-left py-2 px-6 rounded-lg hover:bg-muted transition-colors text-foreground hover:text-primary text-sm"
+                    className="text-left py-2 px-6 rounded-lg transition-colors text-white/80 hover:text-white hover:bg-[#22c55e]/20 text-sm"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
@@ -99,8 +99,8 @@ const MobileMenu = () => {
             </div>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
