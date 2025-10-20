@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { Menu, Zap } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { ConnectButton } from "thirdweb/react";
 import { MobileMenu } from './MobileMenu';
 import { ThemeToggle } from './ThemeToggle';
 import { client, wallets } from '@/lib/thirdweb';
+import logo from '@/assets/logo.png';
 
 export const Header: React.FC = () => {
 
@@ -13,16 +14,9 @@ export const Header: React.FC = () => {
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                Kerdium
-              </span>
-            </div>
-          </div>
+          <a href="/" className="flex items-center">
+            <img src={logo} alt="Logo" className="h-10 w-auto" />
+          </a>
         </div>
 
         {/* Navigation */}
