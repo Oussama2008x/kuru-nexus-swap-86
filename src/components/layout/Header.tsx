@@ -12,10 +12,13 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-transparent">
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4">
-        {/* Logo */}
+        {/* Logo and Mobile Menu */}
         <div className="flex items-center gap-3">
+          {/* Mobile Menu - Next to Logo */}
+          <MobileMenu />
+          
           <a href="/" className="flex items-center">
-            <img src={logo} alt="Logo" className="h-10 w-auto" />
+            <img src={logo} alt="Logo" className="h-12 w-auto" />
           </a>
         </div>
 
@@ -81,9 +84,6 @@ export const Header: React.FC = () => {
               wallets={wallets}
             />
           </div>
-
-          {/* Mobile Menu */}
-          <MobileMenu />
         </div>
       </div>
     </header>
