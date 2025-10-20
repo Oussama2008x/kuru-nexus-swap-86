@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SimpleSwapInterface } from '@/components/swap/SimpleSwapInterface';
+import { BottomDrawer } from '@/components/layout/BottomDrawer';
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
           <SimpleSwapInterface />
         </div>
       </main>
+      <BottomDrawer />
       <Footer />
     </div>
   );
