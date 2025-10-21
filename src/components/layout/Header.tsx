@@ -2,20 +2,30 @@
 import React from 'react';
 import { Menu } from 'lucide-react';
 import { ConnectButton } from "thirdweb/react";
-import { MobileMenu } from './MobileMenu';
 import { ThemeToggle } from './ThemeToggle';
+import { useDrawer } from '@/contexts/DrawerContext';
+import { Button } from '@/components/ui/button';
 import { client, wallets } from '@/lib/thirdweb';
 import logo from '@/assets/logo.png';
 
 export const Header: React.FC = () => {
+  const { toggleDrawer } = useDrawer();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-transparent">
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Logo and Mobile Menu */}
         <div className="flex items-center gap-3">
-          {/* Mobile Menu - Next to Logo */}
-          <MobileMenu />
+          {/* Mobile Menu Button - Opens Bottom Drawer */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleDrawer}
+            className="md:hidden"
+            aria-label="Open menu"
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
           
           <a href="/" className="flex items-center">
             <img src={logo} alt="Logo" className="h-12 w-auto" />

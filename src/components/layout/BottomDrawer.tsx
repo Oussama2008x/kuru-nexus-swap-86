@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerClose } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { useDrawer } from '@/contexts/DrawerContext';
 
 const BottomDrawer = () => {
-  const [isOpen, setIsOpen] = useState(true); // Start open at 50%
-  const [snap, setSnap] = useState<number | string | null>(0.5);
+  const { isOpen, closeDrawer } = useDrawer();
+  const [snap, setSnap] = React.useState<number | string | null>(0.5);
 
   const menuItems = [
     { name: 'Home', href: '/' },
@@ -32,17 +33,17 @@ const BottomDrawer = () => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+        closeDrawer();
       }
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen]);
+  }, [isOpen, closeDrawer]);
 
   return (
     <Drawer 
       open={isOpen} 
-      onOpenChange={setIsOpen}
+      onOpenChange={(open) => !open && closeDrawer()}
       snapPoints={[0, 0.5, 0.9]}
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
@@ -87,7 +88,7 @@ const BottomDrawer = () => {
                   key={item.name}
                   href={item.href}
                   className="text-center py-4 px-6 rounded-xl transition-all duration-200 text-white/90 hover:text-white hover:bg-[#22c55e]/20 active:bg-[#22c55e]/30 border border-transparent hover:border-[#22c55e]/30 text-lg font-medium"
-                  onClick={() => setIsOpen(false)}
+                  onClick={closeDrawer}
                 >
                   {item.name}
                 </a>

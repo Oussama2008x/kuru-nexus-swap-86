@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { Routes, Route } from "react-router-dom";
+import { DrawerProvider } from "@/contexts/DrawerContext";
+import { BottomDrawer } from "@/components/layout/BottomDrawer";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -18,25 +20,28 @@ import About from "./pages/About";
 
 const App = () => (
   <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/swap" element={<Index />} />
-        <Route path="/pool" element={<Pool />} />
-        <Route path="/stake" element={<Stake />} />
-        <Route path="/tasks" element={<Tasks />} />
-        <Route path="/usdc" element={<USDC />} />
-        <Route path="/weth" element={<WETH />} />
-        <Route path="/wbtc" element={<WBTC />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/about" element={<About />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
+    <DrawerProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/swap" element={<Index />} />
+          <Route path="/pool" element={<Pool />} />
+          <Route path="/stake" element={<Stake />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/usdc" element={<USDC />} />
+          <Route path="/weth" element={<WETH />} />
+          <Route path="/wbtc" element={<WBTC />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/about" element={<About />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <BottomDrawer />
+      </TooltipProvider>
+    </DrawerProvider>
   </ThemeProvider>
 );
 
