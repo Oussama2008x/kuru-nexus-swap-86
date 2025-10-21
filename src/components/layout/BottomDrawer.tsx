@@ -4,7 +4,7 @@ import { Drawer, DrawerContent, DrawerClose } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 
 const BottomDrawer = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true); // Start open at 50%
   const [snap, setSnap] = useState<number | string | null>(0.5);
 
   const menuItems = [
@@ -43,7 +43,7 @@ const BottomDrawer = () => {
     <Drawer 
       open={isOpen} 
       onOpenChange={setIsOpen}
-      snapPoints={[0.5, 0.9]}
+      snapPoints={[0, 0.5, 0.9]}
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
       dismissible={true}
@@ -51,13 +51,15 @@ const BottomDrawer = () => {
       direction="bottom"
     >
       <DrawerContent 
-        className="fixed bottom-0 left-0 right-0 h-[90vh] bg-[#111] text-white border-t border-[#22c55e]/30 rounded-t-3xl focus:outline-none"
+        className="fixed bottom-0 left-0 right-0 h-[90vh] bg-[#111] text-white border-t border-[#22c55e]/30 rounded-t-3xl focus:outline-none transition-transform duration-300 ease-in-out"
+        style={{ transform: `translateY(${snap === 0 ? '100%' : '0'})` }}
         aria-label="القائمة الرئيسية"
         aria-hidden={!isOpen}
       >
-        {/* المقبض الأخضر */}
+        {/* المقبض الأخضر - 60px × 6px */}
         <div 
-          className="mx-auto mt-4 h-1.5 w-20 rounded-full bg-[#22c55e] cursor-grab active:cursor-grabbing transition-opacity hover:opacity-80"
+          className="mx-auto mt-4 bg-[#22c55e] cursor-grab active:cursor-grabbing transition-opacity hover:opacity-80"
+          style={{ width: '60px', height: '6px', borderRadius: '10px' }}
           aria-label="اسحب لتغيير حجم القائمة"
         />
         
