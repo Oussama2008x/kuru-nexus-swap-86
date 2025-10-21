@@ -91,10 +91,6 @@ All colors MUST be HSL.
     animation: scroll 20s linear infinite;
   }
 
-  .animate-scroll-slow {
-    animation: scroll 40s linear infinite;
-  }
-
   .light {
     --background: 0 0% 100%;
     --foreground: 215 25% 15%;
