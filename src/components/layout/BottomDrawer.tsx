@@ -6,7 +6,6 @@ import { Github } from 'lucide-react';
 
 const BottomDrawer = () => {
   const { isOpen, closeDrawer } = useDrawer();
-  const [snap, setSnap] = React.useState<number | string | null>(0.5);
   const [protocolOpen, setProtocolOpen] = useState(false);
   const [companyOpen, setCompanyOpen] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
@@ -36,23 +35,21 @@ const BottomDrawer = () => {
     <Drawer 
       open={isOpen} 
       onOpenChange={(open) => !open && closeDrawer()}
-      snapPoints={[0, 0.5, 0.9]}
-      activeSnapPoint={snap}
-      setActiveSnapPoint={setSnap}
       dismissible={true}
       modal={true}
       direction="bottom"
+      shouldScaleBackground={false}
     >
       <DrawerContent 
         className="fixed bottom-0 left-0 right-0 h-[90vh] bg-[#0d0d0d] text-white border-none rounded-t-3xl focus:outline-none"
         aria-label="Main Menu"
         aria-hidden={!isOpen}
       >
-        {/* Drag Handle */}
+        {/* Decorative Handle - Non-draggable */}
         <div 
-          className="mx-auto mt-4 bg-[#404040] cursor-grab active:cursor-grabbing"
+          className="mx-auto mt-4 bg-[#404040] pointer-events-none"
           style={{ width: '48px', height: '4px', borderRadius: '100px' }}
-          aria-label="Drag to resize menu"
+          aria-hidden="true"
         />
         
         <div className="flex flex-col h-full px-6 pb-8 overflow-y-auto">
