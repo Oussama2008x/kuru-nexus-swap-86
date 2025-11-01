@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
   const { toggleDrawer } = useDrawer();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-transparent">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Logo and Mobile Menu */}
         <div className="flex items-center gap-3">
@@ -34,41 +34,41 @@ export const Header: React.FC = () => {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <a href="/" className="text-foreground/60 hover:text-foreground transition-colors">
+          <a href="/" className="text-foreground/60 hover:text-foreground">
             Home
           </a>
-          <a href="/swap" className="text-foreground/60 hover:text-foreground transition-colors">
+          <a href="/swap" className="text-foreground/60 hover:text-foreground">
             Swap
           </a>
-          <a href="/pool" className="text-foreground/60 hover:text-foreground transition-colors">
+          <a href="/pool" className="text-foreground/60 hover:text-foreground">
             Pool
           </a>
-          <a href="/stake" className="text-foreground/60 hover:text-foreground transition-colors">
+          <a href="/stake" className="text-foreground/60 hover:text-foreground">
             Stake
           </a>
-          <a href="/tasks" className="text-foreground/60 hover:text-foreground transition-colors">
+          <a href="/tasks" className="text-foreground/60 hover:text-foreground">
             Tasks
           </a>
           <div className="relative group">
-            <span className="text-foreground/60 hover:text-foreground transition-colors cursor-pointer">
+            <span className="text-foreground/60 hover:text-foreground cursor-pointer">
               Crypto
             </span>
-            <div className="absolute top-full left-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <a href="/usdc" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted transition-colors">
+            <div className="absolute top-full left-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible z-[100]">
+              <a href="/usdc" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted">
                 USDC
               </a>
-              <a href="/weth" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted transition-colors">
+              <a href="/weth" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted">
                 WETH
               </a>
-              <a href="/wbtc" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted transition-colors">
+              <a href="/wbtc" className="block px-4 py-3 text-sm text-foreground/60 hover:text-foreground hover:bg-muted">
                 WBTC
               </a>
             </div>
           </div>
-          <a href="/faq" className="text-foreground/60 hover:text-foreground transition-colors">
+          <a href="/faq" className="text-foreground/60 hover:text-foreground">
             FAQ
           </a>
-          <a href="/about" className="text-foreground/60 hover:text-foreground transition-colors">
+          <a href="/about" className="text-foreground/60 hover:text-foreground">
             About
           </a>
         </nav>

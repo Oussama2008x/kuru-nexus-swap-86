@@ -28,25 +28,12 @@ const BottomDrawer = () => {
   ];
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    if (!isOpen) return;
+    document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        closeDrawer();
-      }
-    };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen, closeDrawer]);
 
   return (
     <Drawer 
@@ -66,7 +53,7 @@ const BottomDrawer = () => {
       >
         {/* Green Handle - 60px × 6px */}
         <div 
-          className="mx-auto mt-4 bg-[#22c55e] cursor-grab active:cursor-grabbing transition-opacity hover:opacity-80"
+          className="mx-auto mt-4 bg-[#22c55e] cursor-grab active:cursor-grabbing hover:opacity-80"
           style={{ width: '60px', height: '6px', borderRadius: '10px' }}
           aria-label="Drag to resize menu"
         />
@@ -95,7 +82,7 @@ const BottomDrawer = () => {
                   <a
                     key={item.name}
                     href={item.href}
-                    className={`text-center py-3 px-6 rounded-xl transition-all duration-200 text-base font-medium relative ${
+                    className={`text-center py-3 px-6 rounded-xl text-base font-medium relative ${
                       isActive 
                         ? 'text-white after:content-[""] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-[#22c55e]' 
                         : 'text-white/80 hover:text-white hover:bg-[#22c55e]/10'
@@ -113,16 +100,16 @@ const BottomDrawer = () => {
           <div className="mt-8">
             <button
               onClick={() => setCompanyOpen(!companyOpen)}
-              className="flex items-center justify-between w-full text-left py-2 px-2 text-sm font-semibold text-white/90 hover:text-white transition-colors"
+              className="flex items-center justify-between w-full text-left py-2 px-2 text-sm font-semibold text-white/90 hover:text-white"
             >
               <span>Company</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${companyOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 ${companyOpen ? 'rotate-180' : ''}`} />
             </button>
             {companyOpen && (
               <div className="mt-2 pl-2">
                 <a
                   href="/about"
-                  className="block py-2 text-sm text-white/70 hover:text-white transition-colors"
+                  className="block py-2 text-sm text-white/70 hover:text-white"
                   onClick={closeDrawer}
                 >
                   About
@@ -135,16 +122,16 @@ const BottomDrawer = () => {
           <div className="mt-4">
             <button
               onClick={() => setLegalOpen(!legalOpen)}
-              className="flex items-center justify-between w-full text-left py-2 px-2 text-sm font-semibold text-white/90 hover:text-white transition-colors"
+              className="flex items-center justify-between w-full text-left py-2 px-2 text-sm font-semibold text-white/90 hover:text-white"
             >
               <span>Legal & Privacy</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${legalOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 ${legalOpen ? 'rotate-180' : ''}`} />
             </button>
             {legalOpen && (
               <div className="mt-2 pl-2">
                 <a
                   href="/privacy"
-                  className="block py-2 text-sm text-white/70 hover:text-white transition-colors"
+                  className="block py-2 text-sm text-white/70 hover:text-white"
                   onClick={closeDrawer}
                 >
                   Privacy Policy
@@ -165,10 +152,10 @@ const BottomDrawer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-full bg-white/5 hover:bg-[#22c55e]/20 transition-all duration-200 group"
+                    className="p-3 rounded-full bg-white/5 hover:bg-[#22c55e]/20 group"
                     aria-label={social.name}
                   >
-                    <Icon className="h-6 w-6 text-white group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.6)] transition-all" />
+                    <Icon className="h-6 w-6 text-white group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
                   </a>
                 );
               })}
