@@ -24,7 +24,7 @@ export const Header: React.FC = () => {
             className="md:hidden"
             aria-label="Open menu"
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-6 w-6 text-primary" />
           </Button>
           
           <a href="/" className="flex items-center">

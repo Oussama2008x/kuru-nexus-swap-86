@@ -17,7 +17,6 @@ const BottomDrawer = () => {
   ];
 
   const productItems = [
-    { name: 'Wallet', href: '/swap', icon: Wallet },
     { name: 'KerdiumX', href: '/stake', icon: Zap },
     { name: 'API', href: '/about', icon: Box },
     { name: 'Kerdchain', href: '/tasks', icon: Star },
@@ -67,7 +66,7 @@ const BottomDrawer = () => {
                     className="flex items-center gap-3 py-3 text-white text-[17px] font-normal"
                     onClick={closeDrawer}
                   >
-                    <Icon className="h-6 w-6 text-[#fc72ff]" strokeWidth={2} />
+                    <Icon className="h-6 w-6 text-primary" strokeWidth={2} />
                     <span>{item.name}</span>
                   </a>
                 );
@@ -89,7 +88,7 @@ const BottomDrawer = () => {
                     className="flex items-center gap-3 py-3 text-white text-[17px] font-normal"
                     onClick={closeDrawer}
                   >
-                    <Icon className="h-6 w-6 text-[#fc72ff]" strokeWidth={2} />
+                    <Icon className="h-6 w-6 text-primary" strokeWidth={2} />
                     <span>{item.name}</span>
                   </a>
                 );
@@ -111,6 +110,17 @@ const BottomDrawer = () => {
                 className={`h-5 w-5 text-[#999999] transition-transform ${protocolOpen ? 'rotate-180' : ''}`} 
               />
             </button>
+            {protocolOpen && (
+              <div className="mt-1 pl-0">
+                <a
+                  href="/faq"
+                  className="block py-3 text-[15px] text-[#999999]"
+                  onClick={closeDrawer}
+                >
+                  FAQ
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Company Section */}
