@@ -17,7 +17,7 @@ const BottomDrawer = () => {
   ];
 
   const productItems = [
-    { name: 'KerdiumX', href: '/stake', icon: Zap },
+    { name: 'KERDstakeX', href: '/stake', icon: Zap },
     { name: 'API', href: '/about', icon: Box },
     { name: 'Kerdchain', href: '/tasks', icon: Star },
   ];

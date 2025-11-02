@@ -18,20 +18,15 @@ const Home = () => {
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4">
-            <Sparkles className="w-3 h-3 mr-1" />
-            Welcome to the Future of DeFi
-          </Badge>
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Kerdium Platform
+              The future
             </span>
             <br />
-            <span className="text-foreground">of the Future</span>
+            <span className="text-foreground">is decentralized</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Experience next-generation DeFi trading with AI-powered algorithms, seamless swaps, 
-            and advanced yield farming on the revolutionary Monad blockchain.
+            Seamless swaps, low fees, and true cross-chain freedom
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="gap-2" onClick={() => window.location.href = '/swap'}>
