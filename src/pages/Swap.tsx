@@ -11,12 +11,11 @@ const Swap: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           {/* Page Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
-              Token Swap
+            <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight mb-4">
+              <span className="bg-gradient-primary bg-clip-text text-transparent italic">
+                Trade whenever, wherever
+              </span>
             </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Swap tokens instantly with the best rates and minimal slippage
-            </p>
           </div>
 
           {/* Swap Interface */}
