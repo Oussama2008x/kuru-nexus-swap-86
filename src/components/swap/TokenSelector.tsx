@@ -4,18 +4,21 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, ChevronDown } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { TOKENS } from '@/lib/contracts';
 import { TOKENS_ETHEREUM } from '@/lib/contracts-ethereum';
 import { getAllTokenPrices, getTokenPrice } from '@/lib/tokenPrices';
 import { useNetwork } from '@/contexts/NetworkContext';
-import { NetworkSwitcher } from '@/components/layout/NetworkSwitcher';
+import { NetworkType } from '@/lib/thirdweb';
+import { useActiveAccount, useSwitchActiveWalletChain } from 'thirdweb/react';
+import { SUPPORTED_NETWORKS } from '@/lib/thirdweb';
+import { useToast } from '@/hooks/use-toast';
 import bitcoinLogo from '@/assets/tokens/bitcoin.png';
 import ethLogo from '@/assets/tokens/eth.png';
 import usdcLogo from '@/assets/tokens/usdc.png';
 import wbtcLogo from '@/assets/tokens/wbtc.png';
 import wethLogo from '@/assets/tokens/weth.png';
-import monadLogo from '@/assets/logo.png';
+import monadLogo from '@/assets/networks/monad.png';
 import ethereumLogo from '@/assets/networks/ethereum.png';
 
 interface TokenSelectorProps {
@@ -45,8 +48,11 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
   selectedToken
 }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [showNetworkSwitcher, setShowNetworkSwitcher] = useState(false);
-  const { currentNetwork } = useNetwork();
+  const [isSwitching, setIsSwitching] = useState(false);
+  const { currentNetwork, setCurrentNetwork } = useNetwork();
+  const account = useActiveAccount();
+  const switchChain = useSwitchActiveWalletChain();
+  const { toast } = useToast();
   
   // Get tokens based on selected network
   const networkTokens = currentNetwork === 'MONAD' ? TOKENS : TOKENS_ETHEREUM;
@@ -64,8 +70,33 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
       ];
   
   const networkInfo = {
-    MONAD: { name: 'MONAD', logo: monadLogo },
-    ETHEREUM: { name: 'ETHEREUM', logo: ethereumLogo },
+    MONAD: { name: 'Monad', logo: monadLogo },
+    ETHEREUM: { name: 'Ethereum', logo: ethereumLogo },
+  };
+
+  const handleNetworkSwitch = async (network: NetworkType) => {
+    if (network === currentNetwork || isSwitching) return;
+
+    setIsSwitching(true);
+    try {
+      if (account) {
+        await switchChain(SUPPORTED_NETWORKS[network]);
+      }
+      setCurrentNetwork(network);
+      toast({
+        title: "Network Switched",
+        description: `Switched to ${networkInfo[network].name}`,
+      });
+    } catch (error: any) {
+      console.error('Network switch error:', error);
+      toast({
+        title: "Switch Failed",
+        description: error.message || "Failed to switch network",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSwitching(false);
+    }
   };
 
   // Popular tokens for quick access
@@ -93,37 +124,22 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-sm">
-        <DialogHeader className="border-b pb-4">
+      <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-sm p-0">
+        <DialogHeader className="border-b pb-4 px-6 pt-6">
           <DialogTitle>Select Token</DialogTitle>
           <DialogDescription>Choose a token from the list below.</DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4">
-          {/* Search Input with Network Selector */}
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Search tokens..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-            <Button 
-              variant="outline" 
-              className="gap-2 min-w-[120px]"
-              onClick={() => setShowNetworkSwitcher(true)}
-            >
-              <img 
-                src={networkInfo[currentNetwork].logo} 
-                alt={networkInfo[currentNetwork].name}
-                className="w-5 h-5 rounded-full"
-              />
-              <span>{networkInfo[currentNetwork].name}</span>
-              <ChevronDown className="w-4 h-4" />
-            </Button>
+        <div className="space-y-4 px-6">
+          {/* Search Input */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder="Search tokens..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
           </div>
 
           {/* Popular Tokens */}
@@ -218,13 +234,42 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
             </div>
           </ScrollArea>
         </div>
-      </DialogContent>
 
-      {/* Network Switcher Dialog */}
-      <NetworkSwitcher
-        isOpen={showNetworkSwitcher}
-        onClose={() => setShowNetworkSwitcher(false)}
-      />
+        {/* Network Switcher Bar at Bottom */}
+        <div className="border-t bg-muted/30 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground font-medium">Network:</span>
+            <div className="flex gap-2 flex-1">
+              {(Object.keys(networkInfo) as NetworkType[]).map((network) => {
+                const info = networkInfo[network];
+                const isSelected = currentNetwork === network;
+                
+                return (
+                  <Button
+                    key={network}
+                    variant={isSelected ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleNetworkSwitch(network)}
+                    disabled={isSwitching}
+                    className={`flex items-center gap-2 ${
+                      isSelected 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'hover:bg-muted'
+                    }`}
+                  >
+                    <img 
+                      src={info.logo} 
+                      alt={info.name}
+                      className="w-4 h-4 rounded-full"
+                    />
+                    <span className="text-xs font-medium">{info.name}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
     </Dialog>
   );
 };
