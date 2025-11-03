@@ -1,6 +1,7 @@
 import { createThirdwebClient } from "thirdweb";
 import { createWallet } from "thirdweb/wallets";
 import { defineChain } from "thirdweb";
+import { ethereum } from "thirdweb/chains";
 
 export const client = createThirdwebClient({
   clientId: "19c0ffb997d9e0d9ea54ddc15ebaff6f",
@@ -23,6 +24,17 @@ export const monadTestnet = defineChain({
     },
   ],
 });
+
+// Export Ethereum Mainnet
+export const ethereumMainnet = ethereum;
+
+// Supported networks
+export const SUPPORTED_NETWORKS = {
+  MONAD: monadTestnet,
+  ETHEREUM: ethereumMainnet,
+} as const;
+
+export type NetworkType = keyof typeof SUPPORTED_NETWORKS;
 
 export const wallets = [
   createWallet("io.metamask"),

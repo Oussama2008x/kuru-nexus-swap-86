@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -6,12 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, ChevronDown } from 'lucide-react';
 import { TOKENS } from '@/lib/contracts';
+import { TOKENS_ETHEREUM } from '@/lib/contracts-ethereum';
 import { getAllTokenPrices, getTokenPrice } from '@/lib/tokenPrices';
+import { useNetwork } from '@/contexts/NetworkContext';
+import { NetworkSwitcher } from '@/components/layout/NetworkSwitcher';
 import bitcoinLogo from '@/assets/tokens/bitcoin.png';
 import ethLogo from '@/assets/tokens/eth.png';
 import usdcLogo from '@/assets/tokens/usdc.png';
 import wbtcLogo from '@/assets/tokens/wbtc.png';
 import wethLogo from '@/assets/tokens/weth.png';
+import monadLogo from '@/assets/logo.png';
+import ethereumLogo from '@/assets/networks/ethereum.png';
 
 interface TokenSelectorProps {
   isOpen: boolean;
@@ -40,12 +45,28 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
   selectedToken
 }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [showNetworkSwitcher, setShowNetworkSwitcher] = useState(false);
+  const { currentNetwork } = useNetwork();
   
-  const allTokens = [
-    // Add native MON token
-    { name: "MONAD", symbol: "MON", decimals: 18, address: "0x0000000000000000000000000000000000000000" },
-    ...TOKENS
-  ];
+  // Get tokens based on selected network
+  const networkTokens = currentNetwork === 'MONAD' ? TOKENS : TOKENS_ETHEREUM;
+  
+  const allTokens = currentNetwork === 'MONAD' 
+    ? [
+        // Add native MON token for Monad
+        { name: "MONAD", symbol: "MON", decimals: 18, address: "0x0000000000000000000000000000000000000000" },
+        ...networkTokens
+      ]
+    : [
+        // Add native ETH token for Ethereum
+        { name: "Ethereum", symbol: "ETH", decimals: 18, address: "0x0000000000000000000000000000000000000000" },
+        ...networkTokens
+      ];
+  
+  const networkInfo = {
+    MONAD: { name: 'MONAD', logo: monadLogo },
+    ETHEREUM: { name: 'ETHEREUM', logo: ethereumLogo },
+  };
 
   // Popular tokens for quick access
   const popularTokens = allTokens.filter(token => 
@@ -90,11 +111,17 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
                 className="pl-9"
               />
             </div>
-            <Button variant="outline" className="gap-2 min-w-[120px]" disabled>
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-xs font-bold">
-                M
-              </div>
-              <span>MONAD</span>
+            <Button 
+              variant="outline" 
+              className="gap-2 min-w-[120px]"
+              onClick={() => setShowNetworkSwitcher(true)}
+            >
+              <img 
+                src={networkInfo[currentNetwork].logo} 
+                alt={networkInfo[currentNetwork].name}
+                className="w-5 h-5 rounded-full"
+              />
+              <span>{networkInfo[currentNetwork].name}</span>
               <ChevronDown className="w-4 h-4" />
             </Button>
           </div>
@@ -192,6 +219,12 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({
           </ScrollArea>
         </div>
       </DialogContent>
+
+      {/* Network Switcher Dialog */}
+      <NetworkSwitcher
+        isOpen={showNetworkSwitcher}
+        onClose={() => setShowNetworkSwitcher(false)}
+      />
     </Dialog>
   );
 };
