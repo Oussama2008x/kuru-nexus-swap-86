@@ -9,7 +9,7 @@ export const client = createThirdwebClient({
 
 // Define Monad Testnet
 export const monadTestnet = defineChain({
-  id: 41454,
+  id: 10143,
   name: "Monad Testnet",
   nativeCurrency: {
     name: "MON",
