@@ -141,13 +141,13 @@ All colors MUST be HSL.
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-33.33%);
+    transform: translateX(-50%);
   }
 }
 
 @keyframes scroll-ltr {
   0% {
-    transform: translateX(-33.33%);
+    transform: translateX(-50%);
   }
   100% {
     transform: translateX(0);
@@ -155,17 +155,9 @@ All colors MUST be HSL.
 }
 
 .animate-scroll-rtl {
-  animation: scroll-rtl 20s linear infinite;
-}
-
-.animate-scroll-rtl:hover {
-  animation-play-state: paused;
+  animation: scroll-rtl 25s linear infinite;
 }
 
 .animate-scroll-ltr {
-  animation: scroll-ltr 20s linear infinite;
-}
-
-.animate-scroll-ltr:hover {
-  animation-play-state: paused;
+  animation: scroll-ltr 25s linear infinite;
 }
