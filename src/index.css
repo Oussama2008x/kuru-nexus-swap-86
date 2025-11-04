@@ -77,20 +77,6 @@ All colors MUST be HSL.
     --sidebar-ring: 148 94% 68%;
   }
 
-  /* Moving text animation */
-  @keyframes scroll {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-
-  .animate-scroll {
-    animation: scroll 20s linear infinite;
-  }
-
   .light {
     --background: 0 0% 100%;
     --foreground: 215 25% 15%;
@@ -129,9 +115,7 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -150,4 +134,21 @@ All colors MUST be HSL.
   *, *:before, *:after {
     box-sizing: inherit;
   }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
 }

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Zap, TrendingUp, Shield, Sparkles, ArrowRight, Users, DollarSign } from 'lucide-react';
+import { BlockchainMarquee } from '@/components/home/BlockchainMarquee';
 import platformSecurity from '@/assets/platform-security.png';
 import bitcoinLogo from '@/assets/tokens/bitcoin.png';
 import ethLogo from '@/assets/tokens/eth.png';
@@ -39,6 +40,9 @@ const Home = () => {
             </Button>
           </div>
         </div>
+
+        {/* Blockchain Marquee Section */}
+        <BlockchainMarquee />
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
