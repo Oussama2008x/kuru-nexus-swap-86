@@ -89,7 +89,7 @@ export const WBTCStats = () => {
       <Card>
         <CardContent className="pt-6">
           <div className="text-center text-muted-foreground">
-            فشل في تحميل بيانات WBTC
+            Failed to load WBTC data
           </div>
         </CardContent>
       </Card>
@@ -102,7 +102,7 @@ export const WBTCStats = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">سعر WBTC</CardTitle>
+            <CardTitle className="text-sm font-medium">WBTC Price</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -126,34 +126,34 @@ export const WBTCStats = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">حجم التداول 24س</CardTitle>
+            <CardTitle className="text-sm font-medium">24h Volume</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${formatNumber(stats.volume24h)}</div>
-            <p className="text-xs text-muted-foreground">حجم التداول اليومي</p>
+            <p className="text-xs text-muted-foreground">Daily Trading Volume</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">القيمة السوقية</CardTitle>
+            <CardTitle className="text-sm font-medium">Market Cap</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${formatNumber(stats.marketCap)}</div>
-            <p className="text-xs text-muted-foreground">إجمالي القيمة السوقية</p>
+            <p className="text-xs text-muted-foreground">Total Market Cap</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">المعروض المتداول</CardTitle>
+            <CardTitle className="text-sm font-medium">Circulating Supply</CardTitle>
             <Coins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatNumber(stats.circulatingSupply)}</div>
-            <p className="text-xs text-muted-foreground">WBTC متداولة</p>
+            <p className="text-xs text-muted-foreground">WBTC in Circulation</p>
           </CardContent>
         </Card>
       </div>
@@ -163,28 +163,28 @@ export const WBTCStats = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Coins className="h-5 w-5" />
-            معلومات عقد WBTC
+            WBTC Contract Info
           </CardTitle>
           <CardDescription>
-            تفاصيل العقد الذكي لعملة Wrapped Bitcoin على شبكة Monad
+            Smart contract details for Wrapped Bitcoin on Monad Network
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">اسم الرمز</label>
+              <label className="text-sm font-medium text-muted-foreground">Token Name</label>
               <p className="text-lg font-semibold">{contractInfo.name}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">الرمز</label>
+              <label className="text-sm font-medium text-muted-foreground">Symbol</label>
               <p className="text-lg font-semibold">{contractInfo.symbol}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">الكسور العشرية</label>
+              <label className="text-sm font-medium text-muted-foreground">Decimals</label>
               <p className="text-lg font-semibold">{contractInfo.decimals}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">إجمالي المعروض</label>
+              <label className="text-sm font-medium text-muted-foreground">Total Supply</label>
               <p className="text-lg font-semibold">{formatNumber(parseFloat(contractInfo.totalSupply))}</p>
             </div>
           </div>
@@ -192,7 +192,7 @@ export const WBTCStats = () => {
           <Separator />
           
           <div>
-            <label className="text-sm font-medium text-muted-foreground">عنوان العقد</label>
+            <label className="text-sm font-medium text-muted-foreground">Contract Address</label>
             <div className="flex items-center gap-2 mt-1">
               <code className="text-sm bg-muted px-2 py-1 rounded font-mono break-all">
                 {contractInfo.contractAddress}
@@ -203,12 +203,12 @@ export const WBTCStats = () => {
                 onClick={() => {
                   navigator.clipboard.writeText(contractInfo.contractAddress);
                   toast({
-                    title: "تم النسخ",
-                    description: "تم نسخ عنوان العقد إلى الحافظة",
+                    title: "Copied",
+                    description: "Contract address copied to clipboard",
                   });
                 }}
               >
-                نسخ
+                Copy
               </Button>
             </div>
           </div>
@@ -225,18 +225,18 @@ export const WBTCStats = () => {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>إجراءات سريعة</CardTitle>
+          <CardTitle>Quick Actions</CardTitle>
           <CardDescription>
-            تفاعل مع عقد WBTC على شبكة Monad
+            Interact with WBTC contract on Monad Network
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={() => window.open(`https://testnet-explorer.monad.xyz/address/${contractInfo.contractAddress}`, '_blank')}>
-              عرض في Explorer
+              View in Explorer
             </Button>
             <Button variant="outline" onClick={() => window.open('/swap', '_self')}>
-              تداول WBTC
+              Trade WBTC
             </Button>
           </div>
         </CardContent>

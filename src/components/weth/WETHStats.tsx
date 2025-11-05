@@ -67,7 +67,7 @@ export const WETHStats = () => {
     return (
       <Card className="col-span-full">
         <CardContent className="p-6 text-center">
-          <p className="text-muted-foreground">فشل في تحميل بيانات WETH</p>
+          <p className="text-muted-foreground">Failed to load WETH data</p>
         </CardContent>
       </Card>
     );
@@ -77,10 +77,10 @@ export const WETHStats = () => {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-          معلومات عملة WETH
+          WETH Token Information
         </h2>
         <p className="text-muted-foreground mt-2">
-          عملة الإثيريوم المغلفة على شبكة Monad
+          Wrapped Ethereum on Monad Network
         </p>
       </div>
 
@@ -88,7 +88,7 @@ export const WETHStats = () => {
         {/* WETH Price */}
         <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">سعر WETH</CardTitle>
+            <CardTitle className="text-sm font-medium">WETH Price</CardTitle>
             <DollarSign className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -109,13 +109,13 @@ export const WETHStats = () => {
         {/* Market Cap */}
         <Card className="border-secondary/20 bg-gradient-to-br from-background to-secondary/5">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">القيمة السوقية</CardTitle>
+            <CardTitle className="text-sm font-medium">Market Cap</CardTitle>
             <Activity className="h-4 w-4 text-secondary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatNumber(wethData.marketCap)}</div>
             <p className="text-xs text-muted-foreground">
-              القيمة السوقية الإجمالية
+              Total Market Cap
             </p>
           </CardContent>
         </Card>
@@ -123,13 +123,13 @@ export const WETHStats = () => {
         {/* 24h Volume */}
         <Card className="border-accent/20 bg-gradient-to-br from-background to-accent/5">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">حجم التداول 24ساعة</CardTitle>
+            <CardTitle className="text-sm font-medium">24h Volume</CardTitle>
             <TrendingUp className="h-4 w-4 text-accent" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatNumber(wethData.volume24h)}</div>
             <p className="text-xs text-muted-foreground">
-              خلال 24 ساعة الماضية
+              Last 24 Hours
             </p>
           </CardContent>
         </Card>
@@ -137,13 +137,13 @@ export const WETHStats = () => {
         {/* Contract Address */}
         <Card className="border-muted/20 bg-gradient-to-br from-background to-muted/5">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">عنوان العقد</CardTitle>
+            <CardTitle className="text-sm font-medium">Contract Address</CardTitle>
             <Coins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-sm font-mono break-all">0x92907055EA5FFb809aE9809dF4c193fa345Ebac1</div>
             <p className="text-xs text-muted-foreground">
-              عقد WETH على شبكة Monad Testnet
+              WETH Contract on Monad Testnet
             </p>
           </CardContent>
         </Card>
@@ -154,24 +154,24 @@ export const WETHStats = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            معلومات التغليف والفك
+            Wrap & Unwrap Info
           </CardTitle>
           <CardDescription>
-            يمكنك تحويل ETH إلى WETH والعكس بنسبة 1:1
+            You can convert ETH to WETH and vice versa at 1:1 ratio
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <h4 className="font-medium text-sm">تغليف ETH → WETH</h4>
+              <h4 className="font-medium text-sm">Wrap ETH → WETH</h4>
               <p className="text-xs text-muted-foreground">
-                حول ETH الخاص بك إلى WETH ليصبح متوافق مع ERC-20
+                Convert your ETH to WETH to be ERC-20 compatible
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="font-medium text-sm">فك التغليف WETH → ETH</h4>
+              <h4 className="font-medium text-sm">Unwrap WETH → ETH</h4>
               <p className="text-xs text-muted-foreground">
-                أعد تحويل WETH إلى ETH الأصلي
+                Convert WETH back to native ETH
               </p>
             </div>
           </div>
