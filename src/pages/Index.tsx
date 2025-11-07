@@ -18,13 +18,14 @@ const Index = () => {
             AI-powered DeFi trading platform with smart execution algorithms for optimal performance.
           </p>
           
-          {/* CTA Buttons */}
-          <div className="flex gap-4 justify-center items-center">
-            <button className="px-8 py-4 bg-primary/10 backdrop-blur-sm border border-primary/30 rounded-3xl text-foreground font-semibold transition-all duration-300 hover:bg-primary/20 hover:border-primary/50 hover:scale-105 hover:shadow-[0_0_30px_rgba(88,230,147,0.3)]">
-              Start Trading
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <button className="group relative px-8 py-4 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm border border-primary/30 hover:border-primary/50 rounded-2xl text-foreground font-semibold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(88,230,147,0.3)] min-w-[200px]">
+              <span className="relative z-10">Start Trading</span>
             </button>
-            <button className="px-8 py-4 bg-background/10 backdrop-blur-sm border border-border/30 rounded-3xl text-foreground font-semibold transition-all duration-300 hover:bg-background/20 hover:border-border/50 hover:scale-105">
-              Learn More
+            
+            <button className="group relative px-8 py-4 bg-background/40 hover:bg-background/60 backdrop-blur-sm border border-border/50 hover:border-primary/30 rounded-2xl text-foreground font-semibold transition-all duration-300 hover:scale-105 min-w-[200px]">
+              <span className="relative z-10">Learn More</span>
             </button>
           </div>
         </div>
