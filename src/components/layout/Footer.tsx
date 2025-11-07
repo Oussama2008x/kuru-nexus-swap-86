@@ -8,24 +8,42 @@ const Footer = () => {
     <footer className="border-t bg-background">
       {/* Moving Text Animation */}
       <div className="relative overflow-hidden bg-muted py-4">
-        <div className="animate-scroll whitespace-nowrap">
-          <div className="inline-flex items-center space-x-8 text-sm">
-            <Badge variant="secondary" className="bg-slate-300 text-slate-800 px-4 py-2 rounded-full">
+        <div className="flex animate-scroll">
+          <div className="flex items-center space-x-8 text-sm whitespace-nowrap">
+            <Badge variant="secondary" className="bg-primary text-primary-foreground px-4 py-2 rounded-full">
               MONAD TESTNET
             </Badge>
             <div className="text-2xl font-bold text-foreground relative">
               KERDIUM EXCHANGE
-              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-foreground to-transparent"></div>
+              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
             </div>
-            <span className="text-white font-medium">Coming soon</span>
-            <Badge variant="secondary" className="bg-slate-300 text-slate-800 px-4 py-2 rounded-full">
+            <span className="text-foreground font-medium">Coming soon</span>
+            <Badge variant="secondary" className="bg-primary text-primary-foreground px-4 py-2 rounded-full">
               MONAD TESTNET
             </Badge>
             <div className="text-2xl font-bold text-foreground relative">
               KERDIUM EXCHANGE
-              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-foreground to-transparent"></div>
+              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
             </div>
-            <span className="text-white font-medium">Coming soon</span>
+            <span className="text-foreground font-medium">Coming soon</span>
+          </div>
+          <div className="flex items-center space-x-8 text-sm whitespace-nowrap ml-8">
+            <Badge variant="secondary" className="bg-primary text-primary-foreground px-4 py-2 rounded-full">
+              MONAD TESTNET
+            </Badge>
+            <div className="text-2xl font-bold text-foreground relative">
+              KERDIUM EXCHANGE
+              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+            </div>
+            <span className="text-foreground font-medium">Coming soon</span>
+            <Badge variant="secondary" className="bg-primary text-primary-foreground px-4 py-2 rounded-full">
+              MONAD TESTNET
+            </Badge>
+            <div className="text-2xl font-bold text-foreground relative">
+              KERDIUM EXCHANGE
+              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+            </div>
+            <span className="text-foreground font-medium">Coming soon</span>
           </div>
         </div>
       </div>

@@ -154,10 +154,23 @@ All colors MUST be HSL.
   }
 }
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
 .animate-scroll-rtl {
   animation: scroll-rtl 25s linear infinite;
 }
 
 .animate-scroll-ltr {
   animation: scroll-ltr 25s linear infinite;
+}
+
+.animate-scroll {
+  animation: scroll 20s linear infinite;
 }
