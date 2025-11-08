@@ -53,7 +53,7 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-semibold mb-2">Smart Trading</h3>
               <p className="text-muted-foreground">
-                AI-powered algorithms optimize your trades for maximum efficiency and minimal slippage.
+                KERDCHAIN algorithms optimize your trades for maximum efficiency and minimal slippage.
               </p>
             </CardContent>
           </Card>
@@ -114,7 +114,7 @@ const Home = () => {
             <div className="text-center">
               <div className="flex items-center justify-center mb-2">
                 <Shield className="w-5 h-5 text-orange-500 mr-1" />
-                <span className="text-2xl font-bold">99.9%</span>
+                <span className="text-2xl font-bold">100%</span>
               </div>
               <p className="text-sm text-muted-foreground">Uptime</p>
             </div>
