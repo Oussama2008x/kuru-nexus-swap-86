@@ -33,7 +33,7 @@ export const BlockchainMarquee = () => {
           Trade ETH, USDC, WBTC, and more
         </h2>
         <p className="text-xl md:text-2xl text-muted-foreground">
-          Access thousands of assets across 12 chains
+          Access thousands of assets across 4+ chains
         </p>
       </div>
 
