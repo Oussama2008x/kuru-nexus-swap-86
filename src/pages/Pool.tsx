@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronLeft, RotateCcw, ChevronDown, Settings, Info, ArrowDownUp } from 'lucide-react';
+import { ChevronLeft, RotateCcw, ChevronDown, Settings, Info, ArrowDownUp, Plus, Layers, Inbox } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ConnectButton, useActiveAccount, useSwitchActiveWalletChain } from "thirdweb/react";
 import { client, wallets, SUPPORTED_NETWORKS } from '@/lib/thirdweb';
 import { useToast } from '@/hooks/use-toast';
 import { useNetwork } from '@/contexts/NetworkContext';
+import { useLiquidityPositions } from '@/hooks/useLiquidityPositions';
 import { TOKENS } from '@/lib/contracts';
 import { TOKENS_ETHEREUM } from '@/lib/contracts-ethereum';
 import ethLogo from '@/assets/tokens/eth.png';
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Token logo mapping
 const getTokenLogo = (symbol: string) => {
@@ -41,6 +43,7 @@ const getTokenLogo = (symbol: string) => {
 };
 
 const Pool = () => {
+  const [activeTab, setActiveTab] = useState<'positions' | 'new'>('positions');
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const [token1, setToken1] = useState<any>(null);
   const [token2, setToken2] = useState<any>(null);
@@ -57,6 +60,7 @@ const Pool = () => {
   const { toast } = useToast();
   const { currentNetwork, setCurrentNetwork } = useNetwork();
   const switchChain = useSwitchActiveWalletChain();
+  const { positions, isLoading: positionsLoading, addLiquidity } = useLiquidityPositions();
 
   // Get tokens based on selected network
   const networkTokens = currentNetwork === 'MONAD' ? TOKENS : TOKENS_ETHEREUM;
@@ -134,25 +138,134 @@ const Pool = () => {
     setTokenSelectorOpen(true);
   };
 
+  const handleAddLiquidity = useCallback(async () => {
+    if (!token1 || !token2 || !token1Amount || !token2Amount) {
+      toast({
+        title: 'Missing Information',
+        description: 'Please fill in all fields',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      await addLiquidity(
+        token1.address,
+        token2.address,
+        token1Amount,
+        token2Amount
+      );
+      
+      // Reset form after success
+      handleReset();
+      setActiveTab('positions');
+    } catch (error) {
+      console.error('Add liquidity error:', error);
+    }
+  }, [token1, token2, token1Amount, token2Amount, addLiquidity, toast]);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <main className="container mx-auto px-4 py-8 max-w-2xl">
-        {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/" className="hover:text-foreground transition-colors">
-            Your positions
-          </Link>
-          <ChevronLeft className="w-4 h-4 rotate-180" />
-          <span className="text-foreground">New position</span>
+        {/* Page Title with Tabs */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-4xl font-bold">Pools</h1>
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'positions' | 'new')}>
+            <TabsList className="bg-muted">
+              <TabsTrigger value="positions" className="gap-2">
+                <Layers className="w-4 h-4" />
+                Positions
+              </TabsTrigger>
+              <TabsTrigger value="new" className="gap-2">
+                <Plus className="w-4 h-4" />
+                New
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
-        {/* Page Title */}
-        <h1 className="text-4xl font-bold mb-6">New position</h1>
+        {/* Positions Tab */}
+        {activeTab === 'positions' && (
+          <div className="bg-card border border-border rounded-2xl p-6">
+            {!account ? (
+              <div className="text-center py-12">
+                <Inbox className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Connect Wallet</h3>
+                <p className="text-muted-foreground mb-6">Connect your wallet to view your liquidity positions</p>
+                <ConnectButton
+                  client={client}
+                  connectButton={{ 
+                    label: "Connect wallet",
+                    className: "!bg-primary !text-primary-foreground hover:!bg-primary/90 !font-semibold !py-3 !px-6 !rounded-xl"
+                  }}
+                  connectModal={{
+                    privacyPolicyUrl: "https://kerdium.vercel.app/about",
+                    size: "compact",
+                    termsOfServiceUrl: "https://kerdium.vercel.app/faq",
+                    title: "KERDIUM FINANCE",
+                  }}
+                  wallets={wallets}
+                />
+              </div>
+            ) : positions.length === 0 ? (
+              <div className="text-center py-12">
+                <Inbox className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No positions found</h3>
+                <p className="text-muted-foreground mb-6">You don't have any liquidity positions yet</p>
+                <Button 
+                  onClick={() => setActiveTab('new')}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Liquidity
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {positions.map((position, index) => (
+                  <div key={index} className="p-4 bg-muted rounded-xl">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex -space-x-2">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold">
+                            {position.token0.symbol.slice(0, 2)}
+                          </div>
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold">
+                            {position.token1.symbol.slice(0, 2)}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="font-semibold">{position.token0.symbol}/{position.token1.symbol}</div>
+                          <div className="text-sm text-muted-foreground">Pool share: {position.poolShare}%</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-semibold">{position.liquidity} LP</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3 mb-8">
+        {/* New Position Tab */}
+        {activeTab === 'new' && (
+          <>
+            {/* Breadcrumbs */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+              <button onClick={() => setActiveTab('positions')} className="hover:text-foreground transition-colors">
+                Your positions
+              </button>
+              <ChevronLeft className="w-4 h-4 rotate-180" />
+              <span className="text-foreground">New position</span>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 mb-8">
           <Button 
             variant="outline" 
             className="flex items-center gap-2 bg-card border-border hover:bg-muted transition-all hover:scale-105"
